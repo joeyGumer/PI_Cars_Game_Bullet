@@ -74,12 +74,11 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody1);
 
 	//2ndSegment
-	
-	Cylinder segment2(6, 1);
+	Cube segment2(12, 1, 12);
 	segment2.SetPos(0, 3, 15);
-	segment2.SetRotation(90, { 0, 0, 1 });
+	//segment2.SetRotation(90, { 0, 0, 1 });
 	segment2.color.Set(255, 0, 0);
-	circuitcylinder_list.add(segment2);
+	circuitcube_list.add(segment2);
 	PhysBody3D* segmentbody2 = App->physics->AddBody(segment2, 0.0f);
 	circuitbody_list.add(segmentbody2);
 	
@@ -121,8 +120,11 @@ void ModuleSceneIntro::CreateCircuit()
 
 	//9thSegment
 	Cube segment9(105, 1, 8);
-	segment9.SetPos(75, 3, 47);
-	segment9.SetRotation(55, { 0, 1, 0 });
+	mat4x4 a = segment9.transform.rotate(45, { 0, 1, 0 });
+	mat4x4 b = segment9.transform.rotate(20, { 0, 0, 1 });
+	mat4x4 c = segment9.transform.rotate(-2, { 1, 0, 0 });
+	segment9.transform = segment9.transform * a * b * c;
+	segment9.SetPos(78, 20, 55);
 	segment9.color.Set(255, 0, 0);
 	circuitcube_list.add(segment9);
 	PhysBody3D* segmentbody9 = App->physics->AddBody(segment9, 0.0f);
