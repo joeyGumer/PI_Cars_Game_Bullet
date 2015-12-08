@@ -26,6 +26,8 @@ bool ModuleCamera3D::Start()
 	LOG("Setting up the camera");
 	bool ret = true;
 
+	Move({ 0, 5, -100 });
+
 	return ret;
 }
 
@@ -105,11 +107,43 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 	}
 
+	
 	//Camera position respect the player
 	//Testing, should be a better way
-	//btQuaternion rotation = vehicle->GetBody()->getWorldTransform().getRotation();
+	//WOW IT WORKS
+	//Is another option but is the one that is nearest to be the correct
 	else
 	{
+	
+
+		/*btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
+		btVector3 vehicle_pos = (transform.getOrigin());
+	
+		Reference = { vehicle_pos.getX(), vehicle_pos.getY(), vehicle_pos.getZ() };
+		LookAt(Reference);
+
+		Position -= Reference;
+
+		btQuaternion* quat = &(transform.getRotation());
+		float angle = quat->getAngle();
+		btVector3 a = quat->getAxis();
+		vec3 axis = { a.getX(), a.getY(), a.getZ() };
+
+		//Position -= Reference;
+
+		if (quat != q)
+		{
+			X = rotate(X, angle, axis);
+			Y = rotate(Y, angle, axis);
+			Z = rotate(Z, angle,  axis);
+			q = quat;
+		}
+
+		Position = Reference + Z * 10;
+		//Position.y += 5;*/
+		
+		//------
+		//Standard reference
 		btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
 		btVector3 vehicle_pos = (transform.getOrigin());
 
@@ -121,6 +155,9 @@ update_status ModuleCamera3D::Update(float dt)
 		vec3 camera_pos(0, 5, -13);
 
 		App->camera->Position = camera_pos + camera_ref;
+
+		//------------
+		//Using car Z basis
 		/*It also doesn't work using the Z of the vehicle basiss
 		btVector3 vehicle_Z = (transform.getBasis().getColumn(2));
 		
@@ -130,13 +167,14 @@ update_status ModuleCamera3D::Update(float dt)
 		camera_pos.y += 5;
 		App->camera->Position = camera_pos;
 		
+		//---------
+		//Rotation alying a quaternion over the camera point
 		//I can't do it to rotate with the car, ask ric how to do it
 		/*c_pos = quatRotate(rotation, c_pos);
 		vec3 camera_pos = { c_pos.getX(), c_pos.getX(), c_pos.getX() };
 		App->camera->Position = camera_pos;*/
 
 		//Rotation with QWERTY
-		//With the camera position it doesn't work
 		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
 

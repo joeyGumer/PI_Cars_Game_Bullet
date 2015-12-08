@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "glmath.h"
 
+class btQuaternion;
+
 class ModuleCamera3D : public Module
 {
 public:
@@ -26,6 +28,7 @@ public:
 	
 	vec3 X, Y, Z, Position, Reference;
 	bool debug = false;
+	btQuaternion* q;
 
 private:
 
