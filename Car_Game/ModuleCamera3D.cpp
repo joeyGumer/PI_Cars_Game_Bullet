@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
+#include "ModulePlayer.h"
+#include "PhysVehicle3D.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -41,61 +43,118 @@ update_status ModuleCamera3D::Update(float dt)
 	// Implement a debug camera with keys and mouse
 	// Now we can make this movememnt frame rate independant!
 
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		debug = !debug;
+
 	//Default camera movement
-	/*vec3 newPos(0,0,0);
-	float speed = 3.0f * dt;
-	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-		speed = 8.0f * dt;
-
-	if(App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-	if(App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
-
-	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
-
-
-	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
-
-	Position += newPos;
-	Reference += newPos;*/
-
-	// Mouse motion ----------------
-	//Default Camera rotation
-	/*if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if (debug)
 	{
-		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
+		vec3 newPos(0, 0, 0);
+		float speed = 10.0f * dt;
+		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+			speed = 20.0f * dt;
 
-		float Sensitivity = 0.25f;
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
 
-		Position -= Reference;
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
 
-		if(dx != 0)
+
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+
+		Position += newPos;
+		Reference += newPos;
+
+		// Mouse motion ----------------
+		//Default Camera rotation
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 		{
-			float DeltaX = (float)dx * Sensitivity;
+			int dx = -App->input->GetMouseXMotion();
+			int dy = -App->input->GetMouseYMotion();
+
+			float Sensitivity = 0.25f;
+
+			Position -= Reference;
+
+			if (dx != 0)
+			{
+				float DeltaX = (float)dx * Sensitivity;
+
+				X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+				Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+				Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			}
+
+			if (dy != 0)
+			{
+				float DeltaY = (float)dy * Sensitivity;
+
+				Y = rotate(Y, DeltaY, X);
+				Z = rotate(Z, DeltaY, X);
+
+				if (Y.y < 0.0f)
+				{
+					Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+					Y = cross(Z, X);
+				}
+			}
+
+			Position = Reference + Z * length(Position);
+		}
+	}
+
+	//Camera position respect the player
+	//Testing, should be a better way
+	//btQuaternion rotation = vehicle->GetBody()->getWorldTransform().getRotation();
+	else
+	{
+		btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
+		btVector3 vehicle_pos = (transform.getOrigin());
+
+		vec3 camera_ref = { vehicle_pos.getX(), vehicle_pos.getY(), vehicle_pos.getZ() };
+		App->camera->LookAt(camera_ref);
+
+		//Lot's of wrong things
+
+		vec3 camera_pos(0, 5, -13);
+
+		App->camera->Position = camera_pos + camera_ref;
+		/*It also doesn't work using the Z of the vehicle basiss
+		btVector3 vehicle_Z = (transform.getBasis().getColumn(2));
+		
+		btVector3 c_pos = vehicle_pos + vehicle_Z * -10;
+		vec3 camera_pos = { c_pos.getX(), c_pos.getY(), c_pos.getZ() };
+		//Camera height
+		camera_pos.y += 5;
+		App->camera->Position = camera_pos;
+		
+		//I can't do it to rotate with the car, ask ric how to do it
+		/*c_pos = quatRotate(rotation, c_pos);
+		vec3 camera_pos = { c_pos.getX(), c_pos.getX(), c_pos.getX() };
+		App->camera->Position = camera_pos;*/
+
+		//Rotation with QWERTY
+		//With the camera position it doesn't work
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+
+			float Sensitivity = 1.0f;
+			if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+				Sensitivity = -1.0f;
+
+			Position -= Reference;
+
+			float DeltaX = Sensitivity;
 
 			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
 			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
 			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+
+			Position = Reference + Z * length(Position);
 		}
-
-		if(dy != 0)
-		{
-			float DeltaY = (float)dy * Sensitivity;
-
-			Y = rotate(Y, DeltaY, X);
-			Z = rotate(Z, DeltaY, X);
-
-			if(Y.y < 0.0f)
-			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
-			}
-		}
-
-		Position = Reference + Z * length(Position);
-	}*/
+	}
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();

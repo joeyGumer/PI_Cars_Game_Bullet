@@ -18,6 +18,8 @@ public:
 	void GetTransform(float* matrix) const;
 	void SetTransform(const float* matrix) const;
 	void SetPos(float x, float y, float z);
+	//provisional, to see if it works
+	btRigidBody* GetBody(){ return body; }
 
 private:
 	btRigidBody* body = nullptr;
