@@ -17,7 +17,7 @@
 
 ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	debug = true;
+	debug = false;
 
 	collision_conf = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collision_conf);
@@ -212,7 +212,6 @@ PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
 	btRigidBody* body = new btRigidBody(rbInfo);
 	PhysBody3D* pbody = new PhysBody3D(body);
 
-	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.add(pbody);
 
@@ -240,7 +239,6 @@ PhysBody3D* ModulePhysics3D::AddBody(const Cube& cube, float mass)
 	btRigidBody* body = new btRigidBody(rbInfo);
 	PhysBody3D* pbody = new PhysBody3D(body);
 
-	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.add(pbody);
 
@@ -267,7 +265,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Cylinder& cylinder, float mass)
 	btRigidBody* body = new btRigidBody(rbInfo);
 	PhysBody3D* pbody = new PhysBody3D(body);
 
-	body->setUserPointer(pbody);
+	//body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.add(pbody);
 
