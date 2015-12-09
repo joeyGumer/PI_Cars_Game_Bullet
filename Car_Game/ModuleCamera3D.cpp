@@ -116,20 +116,18 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 	
 
-		/*btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
+		btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
 		btVector3 vehicle_pos = (transform.getOrigin());
 	
 		Reference = { vehicle_pos.getX(), vehicle_pos.getY(), vehicle_pos.getZ() };
 		LookAt(Reference);
 
-		Position -= Reference;
-
 		btQuaternion* quat = &(transform.getRotation());
 		float angle = quat->getAngle();
+		
 		btVector3 a = quat->getAxis();
 		vec3 axis = { a.getX(), a.getY(), a.getZ() };
 
-		//Position -= Reference;
 
 		if (quat != q)
 		{
@@ -138,13 +136,21 @@ update_status ModuleCamera3D::Update(float dt)
 			Z = rotate(Z, angle,  axis);
 			q = quat;
 		}
+		vec3 c_pos = Reference + Z * CAMERA_DISTANCE;
 
-		Position = Reference + Z * 10;
-		//Position.y += 5;*/
+		if (c_pos.y < Reference.y + CAMERA_HEIGHT)
+		{
+			c_pos.y = Reference.y + CAMERA_HEIGHT;
+		}
+
+		Position = c_pos;
+
+		
+
 		
 		//------
 		//Standard reference
-		btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
+		/*btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
 		btVector3 vehicle_pos = (transform.getOrigin());
 
 		vec3 camera_ref = { vehicle_pos.getX(), vehicle_pos.getY(), vehicle_pos.getZ() };
@@ -154,7 +160,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		vec3 camera_pos(0, 5, -13);
 
-		App->camera->Position = camera_pos + camera_ref;
+		App->camera->Position = camera_pos + camera_ref;*/
 
 		//------------
 		//Using car Z basis
