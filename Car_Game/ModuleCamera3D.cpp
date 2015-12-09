@@ -109,11 +109,11 @@ update_status ModuleCamera3D::Update(float dt)
 
 	
 	//Camera position respect the player
-	//Testing, should be a better way
 	//WOW IT WORKS
 	//Is another option but is the one that is nearest to be the correct
+	//OMG IT'S FUCKING AMAZING, THIS CAM FOR GOTY GAMES!
 	else
-	{
+	{//cORRECTION FOR COMMIT
 	
 
 		btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
@@ -145,10 +145,12 @@ update_status ModuleCamera3D::Update(float dt)
 
 		Position = c_pos;
 
-		
+		/*
+		// SHAME ON YOU, DAMMIT CAM FAILURES
+		*/
 
-		
 		//------
+	
 		//Standard reference
 		/*btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
 		btVector3 vehicle_pos = (transform.getOrigin());
