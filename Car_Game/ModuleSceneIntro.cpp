@@ -140,9 +140,9 @@ void ModuleSceneIntro::CreateCircuit()
 	Cube segment9(105, 1, 8);
 	mat4x4 a = segment9.transform.rotate(45, { 0, 1, 0 });
 	mat4x4 b = segment9.transform.rotate(20, { 0, 0, 1 });
-	mat4x4 c = segment9.transform.rotate(-2.3f, { 1, 0, 0 });
+	mat4x4 c = segment9.transform.rotate(0, { 1, 0, 0 });
 	segment9.transform = segment9.transform * a * b * c;
-	segment9.SetPos(78, 19.5f, 55);
+	segment9.SetPos(78, 20, 55);
 	segment9.color.Set(255, 0, 0);
 	circuitcube_list.add(segment9);
 	PhysBody3D* segmentbody9 = App->physics->AddBody(segment9, 0.0f);
@@ -150,8 +150,8 @@ void ModuleSceneIntro::CreateCircuit()
 
 	//10thSegment
 	Cube segment10(12, 1, 8);
-	segment10.SetPos(115, 36.2f, 17);
-	segment10.SetRotation(-40, { 0, 1, 0 });
+	segment10.SetPos(115.2f, 37.92f, 17.0f);
+	segment10.SetRotation(-45, { 0, 1, 0 });
 	segment10.color.Set(255, 0, 0);
 	circuitcube_list.add(segment10);
 	PhysBody3D* segmentbody10 = App->physics->AddBody(segment10, 0.0f);
@@ -159,12 +159,37 @@ void ModuleSceneIntro::CreateCircuit()
 
 	//11thSegment
 	Cube segment11(8, 1, 42);
-	segment11.SetPos(114, 36.2f, -6);
-	//segment11.SetRotation(90, { 0, 1, 0 });
+	segment11.SetPos(114, 37.92f, -6);
 	segment11.color.Set(255, 0, 0);
 	circuitcube_list.add(segment11);
 	PhysBody3D* segmentbody11 = App->physics->AddBody(segment11, 0.0f);
 	circuitbody_list.add(segmentbody11);
-	
+
+	//12thSegment
+	Cube segment12(16, 1, 16);
+	segment12.SetPos(114, 37.92f, -34);
+	segment12.SetRotation(90, { 0, 1, 0 });
+	segment12.color.Set(255, 0, 0);
+	circuitcube_list.add(segment12);
+	PhysBody3D* segmentbody12 = App->physics->AddBody(segment12, 0.0f);
+	circuitbody_list.add(segmentbody12);
+
+	//13thSegment
+	Cube segment13(8, 1, 70);
+	segment13.SetPos(72, 37.92f, -34);
+	segment13.SetRotation(90, { 0, 1, 0 });
+	segment13.color.Set(255, 0, 0);
+	circuitcube_list.add(segment13);
+	PhysBody3D* segmentbody13 = App->physics->AddBody(segment13, 0.0f);
+	circuitbody_list.add(segmentbody13);
+
+	//14thSegment
+	Cube segment14(8, 1, 70);
+	segment14.SetPos(-15, 37.92f, -34);
+	segment14.SetRotation(90, { 0, 1, 0 });
+	segment14.color.Set(255, 0, 0);
+	circuitcube_list.add(segment14);
+	PhysBody3D* segmentbody14 = App->physics->AddBody(segment14, 0.0f);
+	circuitbody_list.add(segmentbody14);
 }
 
