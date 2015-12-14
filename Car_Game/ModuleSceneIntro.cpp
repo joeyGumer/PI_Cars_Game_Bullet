@@ -206,10 +206,56 @@ void ModuleSceneIntro::CreateCircuit()
 	mat4x4 e = segment16.transform.rotate(0, { 0, 0, 1 });
 	mat4x4 f = segment16.transform.rotate(-10, { 1, 0, 0 });
 	segment16.transform = segment16.transform * d * e * f;
-	segment16.SetPos(-57, 37.92f, -70);
+	segment16.SetPos(-57, 27.69f, -70);
 	segment16.color.Set(255, 0, 0);
 	circuitcube_list.add(segment16);
 	PhysBody3D* segmentbody16 = App->physics->AddBody(segment16, 0.0f);
 	circuitbody_list.add(segmentbody16);
+
+	//17thSegment
+	Cube segment17(16, 1, 16);
+	segment17.SetPos(-57, 17.5f, -105);
+	segment17.color.Set(255, 0, 0);
+	circuitcube_list.add(segment17);
+	PhysBody3D* segmentbody17 = App->physics->AddBody(segment17, 0.0f);
+	circuitbody_list.add(segmentbody17);
+
+	//18thSegment
+	Cube segment18(43.8f, 1, 8);
+	mat4x4 g = segment18.transform.rotate(0, { 0, 1, 0 });
+	mat4x4 h = segment18.transform.rotate(-19.315f, { 0, 0, 1 });
+	mat4x4 i = segment18.transform.rotate(0, { 1, 0, 0 });
+	segment18.transform = segment18.transform * g * h * i;
+	segment18.SetPos(-28.5f, 10.265f, -105);
+	segment18.color.Set(255, 0, 0);
+	circuitcube_list.add(segment18);
+	PhysBody3D* segmentbody18 = App->physics->AddBody(segment18, 0.0f);
+	circuitbody_list.add(segmentbody18);
+
+
+	//19thSegment
+	Cube segment19(16, 1, 16);
+	segment19.SetPos(0, 3, -105);
+	segment19.color.Set(255, 0, 0);
+	circuitcube_list.add(segment19);
+	PhysBody3D* segmentbody19 = App->physics->AddBody(segment19, 0.0f);
+	circuitbody_list.add(segmentbody19);
+
+	//20thSegment
+	Cube segment20(8, 1, 83);
+	segment20.SetPos(0, 3, -56);
+	segment20.color.Set(255, 0, 0);
+	circuitcube_list.add(segment20);
+	PhysBody3D* segmentbody20 = App->physics->AddBody(segment20, 0.0f);
+	circuitbody_list.add(segmentbody20);
+
+	//21thSegment
+	Cube segment21(5, 1, 8);
+	segment21.SetPos(37, 37.92f, -34);
+	segment21.SetRotation(-12, { 0, 0, 1 });
+	segment21.color.Set(255, 0, 0);
+	circuitcube_list.add(segment21);
+	PhysBody3D* segmentbody21 = App->physics->AddBody(segment21, 0.0f);
+	circuitbody_list.add(segmentbody21);
 }
 
