@@ -66,7 +66,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 void ModuleSceneIntro::CreateCircuit()
 {
 	//1stSegment
-	Cube segment1(8, 1, 30);
+	Cube segment1(9, 1, 30);
 	segment1.SetPos(0, 3, 0);
 	segment1.color.Set(255, 0, 0);
 	circuitcube_list.add(segment1);
@@ -76,7 +76,6 @@ void ModuleSceneIntro::CreateCircuit()
 	//2ndSegment
 	Cube segment2(12, 1, 12);
 	segment2.SetPos(0, 3, 15);
-	//segment2.SetRotation(90, { 0, 0, 1 });
 	segment2.color.Set(255, 0, 0);
 	circuitcube_list.add(segment2);
 	PhysBody3D* segmentbody2 = App->physics->AddBody(segment2, 0.0f);
@@ -84,7 +83,7 @@ void ModuleSceneIntro::CreateCircuit()
 	
 
 	//3rdSegment
-	Cube segment3(8, 1, 40);
+	Cube segment3(9, 1, 40);
 	segment3.SetPos(-7, 3, 37);
 	segment3.SetRotation(-20, { 0, 1, 0 });
 	segment3.color.Set(255, 0, 0);
@@ -102,7 +101,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody4);
 
 	//5thSegment
-	Cube segment5(8, 1, 30);
+	Cube segment5(9, 1, 30);
 	segment5.SetPos(-7, 3, 75);
 	segment5.SetRotation(30, { 0, 1, 0 });
 	segment5.color.Set(255, 0, 0);
@@ -120,7 +119,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody6);
 
 	//7thSegment
-	Cube segment7(35, 1, 8);
+	Cube segment7(35, 1, 9);
 	segment7.SetPos(22, 3, 90);
 	segment7.color.Set(255, 0, 0);
 	circuitcube_list.add(segment7);
@@ -128,7 +127,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody7);
 
 	//8thSegment
-	Cube segment8(12, 1, 12);
+	Cube segment8(16, 1, 16);
 	segment8.SetPos(41, 3, 90);
 	segment8.SetRotation(-10, { 0, 1, 0 });
 	segment8.color.Set(255, 0, 0);
@@ -149,7 +148,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody9);
 
 	//10thSegment
-	Cube segment10(12, 1, 8);
+	Cube segment10(12, 1, 9);
 	segment10.SetPos(115.2f, 37.92f, 17.0f);
 	segment10.SetRotation(-45, { 0, 1, 0 });
 	segment10.color.Set(255, 0, 0);
@@ -158,7 +157,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody10);
 
 	//11thSegment
-	Cube segment11(8, 1, 42);
+	Cube segment11(9, 1, 42);
 	segment11.SetPos(114, 37.92f, -6);
 	segment11.color.Set(255, 0, 0);
 	circuitcube_list.add(segment11);
@@ -166,7 +165,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody11);
 
 	//12thSegment
-	Cube segment12(16, 1, 16);
+	Cube segment12(18, 1, 18);
 	segment12.SetPos(114, 37.92f, -34);
 	segment12.SetRotation(90, { 0, 1, 0 });
 	segment12.color.Set(255, 0, 0);
@@ -175,7 +174,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody12);
 
 	//13thSegment
-	Cube segment13(8, 1, 70);
+	Cube segment13(9, 1, 70);
 	segment13.SetPos(72, 37.92f, -34);
 	segment13.SetRotation(90, { 0, 1, 0 });
 	segment13.color.Set(255, 0, 0);
@@ -184,7 +183,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody13);
 
 	//14thSegment
-	Cube segment14(8, 1, 70);
+	Cube segment14(9, 1, 70);
 	segment14.SetPos(-15, 37.92f, -34);
 	segment14.SetRotation(90, { 0, 1, 0 });
 	segment14.color.Set(255, 0, 0);
@@ -193,7 +192,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody14);
 
 	//15thSegment
-	Cube segment15(16, 1, 16);
+	Cube segment15(18, 1, 18);
 	segment15.SetPos(-57, 37.92f, -34);
 	segment15.color.Set(255, 0, 0);
 	circuitcube_list.add(segment15);
@@ -201,7 +200,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody15);
 
 	//16thSegment
-	Cube segment16(8, 1, 60);
+	Cube segment16(9, 1, 60);
 	mat4x4 d = segment16.transform.rotate(0, { 0, 1, 0 });
 	mat4x4 e = segment16.transform.rotate(0, { 0, 0, 1 });
 	mat4x4 f = segment16.transform.rotate(-10, { 1, 0, 0 });
@@ -213,7 +212,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody16);
 
 	//17thSegment
-	Cube segment17(16, 1, 16);
+	Cube segment17(18, 1, 18);
 	segment17.SetPos(-57, 17.5f, -105);
 	segment17.color.Set(255, 0, 0);
 	circuitcube_list.add(segment17);
@@ -221,7 +220,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody17);
 
 	//18thSegment
-	Cube segment18(43.8f, 1, 8);
+	Cube segment18(43.8f, 1, 9);
 	mat4x4 g = segment18.transform.rotate(0, { 0, 1, 0 });
 	mat4x4 h = segment18.transform.rotate(-19.315f, { 0, 0, 1 });
 	mat4x4 i = segment18.transform.rotate(0, { 1, 0, 0 });
@@ -234,7 +233,7 @@ void ModuleSceneIntro::CreateCircuit()
 
 
 	//19thSegment
-	Cube segment19(16, 1, 16);
+	Cube segment19(18, 1, 18);
 	segment19.SetPos(0, 3, -105);
 	segment19.color.Set(255, 0, 0);
 	circuitcube_list.add(segment19);
@@ -242,7 +241,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody19);
 
 	//20thSegment
-	Cube segment20(8, 1, 83);
+	Cube segment20(9, 1, 83);
 	segment20.SetPos(0, 3, -56);
 	segment20.color.Set(255, 0, 0);
 	circuitcube_list.add(segment20);
@@ -250,7 +249,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitbody_list.add(segmentbody20);
 
 	//21thSegment
-	Cube segment21(5, 1, 8);
+	Cube segment21(5, 1, 9);
 	segment21.SetPos(37, 37.92f, -34);
 	segment21.SetRotation(-12, { 0, 0, 1 });
 	segment21.color.Set(255, 0, 0);
