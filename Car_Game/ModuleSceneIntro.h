@@ -21,14 +21,9 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
-public:
-	/*
-	PhysBody3D* pb_snake[MAX_SNAKE];
-	Sphere s_snake[MAX_SNAKE];
+	void CreateCircuit();
 
-	PhysBody3D* pb_snake2[MAX_SNAKE];
-	Sphere s_snake2[MAX_SNAKE];
-	*/
+public:
 
 	PhysBody3D* pb_chassis;
 	Cube p_chassis;
@@ -41,4 +36,8 @@ public:
 
 	PhysMotor3D* left_wheel;
 	PhysMotor3D* right_wheel;
+
+	p2List<PhysBody3D*> circuitbody_list;
+	p2List<Cube> circuitcube_list;
+	p2List<Cylinder> circuitcylinder_list;
 };

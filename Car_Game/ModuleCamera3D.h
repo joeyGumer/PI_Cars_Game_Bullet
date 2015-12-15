@@ -3,6 +3,10 @@
 #include "Globals.h"
 #include "glmath.h"
 
+#define CAMERA_DISTANCE 20
+#define CAMERA_HEIGHT 10
+
+class btQuaternion;
 class ModuleCamera3D : public Module
 {
 public:
@@ -25,6 +29,8 @@ private:
 public:
 	
 	vec3 X, Y, Z, Position, Reference;
+	bool debug = false;
+	btQuaternion* q;
 
 private:
 
