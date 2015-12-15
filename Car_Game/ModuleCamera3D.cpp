@@ -110,7 +110,6 @@ update_status ModuleCamera3D::Update(float dt)
 	
 	//Camera position respect the player
 	//WOW IT WORKS
-	//Is another option but is the one that is nearest to be the correct
 	//OMG IT'S FUCKING AMAZING, THIS CAM FOR GOTY GAMES!
 	else
 	{
