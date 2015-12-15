@@ -22,6 +22,7 @@ public:
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
 	void CreateCircuit();
+	void CreateObstacles();
 
 public:
 
@@ -38,6 +39,8 @@ public:
 	PhysMotor3D* right_wheel;
 
 	p2List<PhysBody3D*> circuitbody_list;
+	p2List<PhysBody3D*> obstaclebody_list;
 	p2List<Cube> circuitcube_list;
-	p2List<Cylinder> circuitcylinder_list;
+	p2List<Cylinder> obstaclecylinder_list;
+	p2List<Cube> obstaclecube_list;
 };

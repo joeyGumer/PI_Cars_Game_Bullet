@@ -21,6 +21,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));*/
 
 	CreateCircuit();
+	CreateObstacles();
 
 	return ret;
 }
@@ -49,11 +50,19 @@ update_status ModuleSceneIntro::Update(float dt)
 	}
 
 	p2List_item<Cylinder>* tmp2;
-	tmp2 = circuitcylinder_list.getFirst();
+	tmp2 = obstaclecylinder_list.getFirst();
 	while (tmp2 != NULL)
 	{
 		tmp2->data.Render();
 		tmp2 = tmp2->next;
+	}
+
+	p2List_item<Cube>* tmp3;
+	tmp3 = obstaclecube_list.getFirst();
+	while (tmp3 != NULL)
+	{
+		tmp3->data.Render();
+		tmp3 = tmp3->next;
 	}
 
 	return UPDATE_CONTINUE;
@@ -256,5 +265,67 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitcube_list.add(segment21);
 	PhysBody3D* segmentbody21 = App->physics->AddBody(segment21, 0.0f);
 	circuitbody_list.add(segmentbody21);
+}
+
+void ModuleSceneIntro::CreateObstacles()
+{
+	//1stObstacle
+	Cylinder obstacle1(0.5f, 8);
+	obstacle1.SetPos(78, 20.25, 55);
+	obstacle1.SetRotation(-45, { 0, 1, 0 });
+	obstacle1.color.Set(0, 0, 0.5f);
+	obstaclecylinder_list.add(obstacle1);
+	PhysBody3D* obstaclebody1 = App->physics->AddBody(obstacle1, 0.0f);
+	obstaclebody_list.add(obstaclebody1);
+
+	//2ndObstacle
+	Cylinder obstacle2(0.5f, 8);
+	obstacle2.SetPos(77, 19.8, 56);
+	obstacle2.SetRotation(-45, { 0, 1, 0 });
+	obstacle2.color.Set(0, 0, 0.5f);
+	obstaclecylinder_list.add(obstacle2);
+	PhysBody3D* obstaclebody2 = App->physics->AddBody(obstacle2, 0.0f);
+	obstaclebody_list.add(obstaclebody2);
+
+	//3rdObstacle
+	Cylinder obstacle3(0.5f, 8);
+	obstacle3.SetPos(79, 20.85, 54);
+	obstacle3.SetRotation(-45, { 0, 1, 0 });
+	obstacle3.color.Set(0, 0, 0.5f);
+	obstaclecylinder_list.add(obstacle3);
+	PhysBody3D* obstaclebody3 = App->physics->AddBody(obstacle3, 0.0f);
+	obstaclebody_list.add(obstaclebody3);
+
+	//4thObstacle
+	Cube obstacle4(0.6f, 30, 0.6f);
+	obstacle4.SetPos(86, 15, 50);
+	obstacle4.color.Set(0, 0, 0.5f);
+	obstaclecube_list.add(obstacle4);
+	PhysBody3D* obstaclebody4 = App->physics->AddBody(obstacle4, 0.0f);
+	obstaclebody_list.add(obstaclebody4);
+
+	//5thObstacle
+	Cube obstacle5(0.6f, 30, 0.6f);
+	obstacle5.SetPos(80, 15, 50);
+	obstacle5.color.Set(0, 0, 0.5f);
+	obstaclecube_list.add(obstacle5);
+	PhysBody3D* obstaclebody5 = App->physics->AddBody(obstacle5, 0.0f);
+	obstaclebody_list.add(obstaclebody5);
+
+	//6thObstacle
+	Cube obstacle6(0.9f, 30, 0.9f);
+	obstacle6.SetPos(70, 15, 63);
+	obstacle6.color.Set(0, 0, 0.5f);
+	obstaclecube_list.add(obstacle6);
+	PhysBody3D* obstaclebody6 = App->physics->AddBody(obstacle6, 0.0f);
+	obstaclebody_list.add(obstaclebody6);
+
+	//7thObstacle
+	Cube obstacle7(2, 30, 2);
+	obstacle7.SetPos(90, 15, 41);
+	obstacle7.color.Set(0, 0, 0.5f);
+	obstaclecube_list.add(obstacle7);
+	PhysBody3D* obstaclebody7 = App->physics->AddBody(obstacle7, 0.0f);
+	obstaclebody_list.add(obstaclebody7);
 }
 

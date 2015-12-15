@@ -265,7 +265,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Cylinder& cylinder, float mass)
 	btRigidBody* body = new btRigidBody(rbInfo);
 	PhysBody3D* pbody = new PhysBody3D(body);
 
-	//body->setUserPointer(pbody);
+	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.add(pbody);
 
@@ -299,6 +299,7 @@ PhysVehicle3D* ModulePhysics3D::AddVehicle(const VehicleInfo& info)
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setContactProcessingThreshold(BT_LARGE_FLOAT);
 	body->setActivationState(DISABLE_DEACTIVATION);
+
 
 	world->addRigidBody(body);
 
