@@ -31,6 +31,7 @@ public:
 	vec3 X, Y, Z, Position, Reference;
 	bool debug = false;
 	btQuaternion* q;
+	bool	first_person = false;
 
 private:
 
