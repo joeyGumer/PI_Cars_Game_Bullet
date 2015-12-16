@@ -8,6 +8,7 @@
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
 	turn = acceleration = brake = 0.0f;
+	isJumping = false;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -22,14 +23,14 @@ bool ModulePlayer::Start()
 
 	// Car properties ----------------------------------------
 	car.chassis_size.Set(2, 0.5, 4);
-	car.chassis_offset.Set(0, 0.8, 0);
+	car.chassis_offset.Set(0, 0.5, 0);
 	car.mass = 1000.0f;
 	car.suspensionStiffness = 100.88f;
-	car.suspensionCompression = 0.83f;
+	car.suspensionCompression = 3.0f;
 	car.suspensionDamping = 0.88f;
 	car.maxSuspensionTravelCm = 1000.0f;
 	car.frictionSlip = 2000.5;
-	car.maxSuspensionForce = 2300.0f;
+	car.maxSuspensionForce = 5000.0f;
 
 	// Wheel properties ---------------------------------------
 	float connection_height = 1.5f;
@@ -97,7 +98,7 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	vehicle = App->physics->AddVehicle(car);
-	vehicle->SetPos(0, 5, 2);
+	vehicle->SetPos(0, 3, 2);
 	vehicle->GetTransform(origin.M);
 	return true;
 }
@@ -117,6 +118,13 @@ update_status ModulePlayer::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_UP)
 	{
+		vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
+		vehicle->SetTransform(origin.M);
+	}
+
+	if (vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
+	{
+		vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
 		vehicle->SetTransform(origin.M);
 	}
 
@@ -139,8 +147,16 @@ update_status ModulePlayer::Update(float dt)
 
 	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
+		if (vehicle->GetBody()->getLinearVelocity() > 0)
+			brake = BRAKE_POWER;
+
 		//acceleration = -MAX_ACCELERATION * 0.5;
-		brake = BRAKE_POWER;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN && !isJumping)
+	{
+		vehicle->GetBody()->applyCentralForce({ 0, 500000, 0 });
+		isJumping = true;
 	}
 
 	vehicle->ApplyEngineForce(acceleration);

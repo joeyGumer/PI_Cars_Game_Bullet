@@ -43,4 +43,9 @@ public:
 	p2List<Cube> circuitcube_list;
 	p2List<Cylinder> obstaclecylinder_list;
 	p2List<Cube> obstaclecube_list;
+
+	PhysBody3D* pb_spinningcube;
+	Cube p_spinningcube;
+
+
 };
