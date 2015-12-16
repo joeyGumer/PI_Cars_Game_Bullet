@@ -327,5 +327,33 @@ void ModuleSceneIntro::CreateObstacles()
 	obstaclecube_list.add(obstacle7);
 	PhysBody3D* obstaclebody7 = App->physics->AddBody(obstacle7, 0.0f);
 	obstaclebody_list.add(obstaclebody7);
+
+	//8thObstacle
+	Cube obstacle8(1, 16, 1);
+	obstacle8.SetPos(41, 8, 90);
+	obstacle8.SetRotation(45, { 0, 1, 0 });
+	obstacle8.color.Set(0, 0, 0.5f);
+	obstaclecube_list.add(obstacle8);
+	PhysBody3D* obstaclebody8 = App->physics->AddBody(obstacle8, 0.0f);
+	obstaclebody_list.add(obstaclebody8);
+
+	//9thObstacle
+	Cube obstacle9(2.2f, 8, 20);
+	obstacle9.SetPos(-11, 4, 75);
+	obstacle9.SetRotation(30, { 0, 1, 0 });
+	obstacle9.color.Set(0, 0, 0.5f);
+	obstaclecube_list.add(obstacle9);
+	PhysBody3D* obstaclebody9 = App->physics->AddBody(obstacle9, 0.0f);
+	obstaclebody_list.add(obstaclebody9);
+
+	//10thObstacle
+	Cube obstacle10(2.2f, 8, 20);
+	obstacle10.SetPos(-2.75f, 4, 75);
+	obstacle10.SetRotation(30, { 0, 1, 0 });
+	obstacle10.color.Set(0, 0, 0.5f);
+	obstaclecube_list.add(obstacle10);
+	PhysBody3D* obstaclebody10 = App->physics->AddBody(obstacle10, 0.0f);
+	obstaclebody_list.add(obstaclebody10);
+
 }
 
