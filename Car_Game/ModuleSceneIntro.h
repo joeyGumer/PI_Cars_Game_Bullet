@@ -9,6 +9,7 @@
 struct PhysBody3D;
 struct PhysMotor3D;
 
+
 class ModuleSceneIntro : public Module
 {
 public:
@@ -19,9 +20,10 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
+	void OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEvent pevent);
 
 	void CreateCircuit();
+	void CreateCheckpoints();
 
 public:
 
@@ -39,5 +41,11 @@ public:
 
 	p2List<PhysBody3D*> circuitbody_list;
 	p2List<Cube> circuitcube_list;
-	p2List<Cylinder> circuitcylinder_list;
+	
+	//p2List<Cylinder> circuitcylinder_list;
+
+	p2List<PhysBody3D*> pb_checkpoint_list;
+	p2List<Cube> checkpoint_list;
+
+	PhysBody3D* last_checkpoint = NULL;
 };

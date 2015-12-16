@@ -3,6 +3,8 @@
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
 #include "PhysBody3D.h"
+#include "ModulePlayer.h"
+#include "PhysVehicle3D.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -21,6 +23,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));*/
 
 	CreateCircuit();
+	CreateCheckpoints();
 
 	return ret;
 }
@@ -29,6 +32,11 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
+
+	circuitbody_list.clear();
+	circuitcube_list.clear();
+	checkpoint_list.clear();
+	pb_checkpoint_list.clear();
 
 	return true;
 }
@@ -42,27 +50,72 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	p2List_item<Cube>* tmp;
 	tmp = circuitcube_list.getFirst();
-	while (tmp != NULL)
-	{
+	for (; tmp; tmp = tmp->next)
 		tmp->data.Render();
-		tmp = tmp->next;
+
+	tmp = checkpoint_list.getFirst();
+	for (; tmp; tmp = tmp->next)
+		tmp->data.Render();
+
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	{
+		mat4x4 transform = IdentityMatrix;
+		last_checkpoint->GetTransform(&transform);
+		App->player->vehicle->SetTransform(&transform);
 	}
 
-	p2List_item<Cylinder>* tmp2;
-	tmp2 = circuitcylinder_list.getFirst();
+	//p2List_item<Cylinder>* tmp2;
+	
+	/*tmp2 = circuitcylinder_list.getFirst();
 	while (tmp2 != NULL)
 	{
 		tmp2->data.Render();
 		tmp2 = tmp2->next;
-	}
+	}*/
 
 	return UPDATE_CONTINUE;
 }
 
-void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
+void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEvent pevent)
 {
+	//Provisional
+	if (/*body1 == App->player->vehicle &&*/ body1->IsSensor())
+	{
+		if (pevent == BEGIN_CONTACT)
+		{
+			last_checkpoint = body1;
+		}
+	}
 }
 
+void ModuleSceneIntro::CreateCheckpoints()
+{
+	//Checkpoint 1
+	Cube checkpoint1(9, 5, 1);
+	checkpoint1.SetPos(0, 5, 0);
+	checkpoint1.color = Green;
+	checkpoint_list.add(checkpoint1);
+	PhysBody3D* pb_checkpoint1 = App->physics->AddBody(checkpoint1, 0.0f);
+	pb_checkpoint1->SetAsSensor(true);
+	pb_checkpoint1->collision_listeners.add(this);
+	pb_checkpoint_list.add(pb_checkpoint1);
+
+	//last_checkpoint = pb_checkpoint1;
+
+	//Checkpoint 2
+	Cube checkpoint2(9, 5, 1);
+	checkpoint2.SetPos(10, 40.92f, -34);
+	checkpoint2.SetRotation(-90, { 0, 1, 0 });
+	checkpoint2.color = Green;
+	checkpoint_list.add(checkpoint2);
+	PhysBody3D* pb_checkpoint2 = App->physics->AddBody(checkpoint2, 0.0f);
+	pb_checkpoint2->SetAsSensor(true);
+	pb_checkpoint2->collision_listeners.add(this);
+	pb_checkpoint_list.add(pb_checkpoint2);
+
+	last_checkpoint = pb_checkpoint2;
+
+}
 void ModuleSceneIntro::CreateCircuit()
 {
 	//1stSegment
@@ -72,6 +125,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitcube_list.add(segment1);
 	PhysBody3D* segmentbody1 = App->physics->AddBody(segment1, 0.0f);
 	circuitbody_list.add(segmentbody1);
+	
 
 	//2ndSegment
 	Cube segment2(12, 1, 12);

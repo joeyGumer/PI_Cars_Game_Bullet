@@ -115,10 +115,14 @@ update_status ModulePlayer::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 
+	
+	/*
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_UP)
 	{
 		vehicle->SetTransform(origin.M);
 	}
+	*/
+	
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
@@ -139,8 +143,8 @@ update_status ModulePlayer::Update(float dt)
 
 	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
-		//acceleration = -MAX_ACCELERATION * 0.5;
-		brake = BRAKE_POWER;
+		acceleration = -MAX_ACCELERATION * 0.5;
+		//brake = BRAKE_POWER;
 	}
 
 	vehicle->ApplyEngineForce(acceleration);

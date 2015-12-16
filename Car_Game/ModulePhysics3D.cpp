@@ -74,7 +74,14 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 {
 	world->stepSimulation(dt, 15);
 
+
 	int numManifolds = world->getDispatcher()->getNumManifolds();
+
+	/*p2List_item<PhysBody3D*>* tmp = bodies.getFirst();
+	for (; tmp; tmp = tmp->next)
+		tmp->data->is_colliding = false;*/
+	
+
 	for(int i = 0; i<numManifolds; i++)
 	{
 		btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
@@ -89,19 +96,26 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 
 			if(pbodyA && pbodyB)
 			{
-				p2List_item<Module*>* item = pbodyA->collision_listeners.getFirst();
-				while(item)
-				{
-					item->data->OnCollision(pbodyA, pbodyB);
-					item = item->next;
-				}
+				//pbodyA->is_colliding = pbodyB->is_colliding = true;
 
-				item = pbodyB->collision_listeners.getFirst();
-				while(item)
-				{
-					item->data->OnCollision(pbodyB, pbodyA);
-					item = item->next;
-				}
+				//if (pbodyA->was_colliding == false && pbodyB->was_colliding == false)
+				//{
+					p2List_item<Module*>* item = pbodyA->collision_listeners.getFirst();
+					while (item)
+					{
+						item->data->OnCollision(pbodyA, pbodyB, BEGIN_CONTACT);
+						item = item->next;
+					}
+
+					item = pbodyB->collision_listeners.getFirst();
+					while (item)
+					{
+						item->data->OnCollision(pbodyB, pbodyA, BEGIN_CONTACT);
+						item = item->next;
+					}
+				//}
+				
+				//pbodyA->was_colliding = pbodyB->was_colliding = true;
 			}
 		}
 	}

@@ -14,6 +14,12 @@ struct PhysBody3D;
 struct PhysVehicle3D;
 struct VehicleInfo;
 
+enum PhysEvent
+{
+	BEGIN_CONTACT,
+	END_CONTACT,
+};
+
 class ModulePhysics3D : public Module
 {
 public:
