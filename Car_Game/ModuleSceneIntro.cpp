@@ -22,6 +22,9 @@ bool ModuleSceneIntro::Start()
 
 	CreateCircuit();
 	CreateObstacles();
+	CreateDynObstacles();
+
+	angle = 0;
 
 	return ret;
 }
@@ -64,6 +67,8 @@ update_status ModuleSceneIntro::Update(float dt)
 		tmp3->data.Render();
 		tmp3 = tmp3->next;
 	}
+
+	UpdateDynObstacles();
 
 	return UPDATE_CONTINUE;
 }
@@ -258,16 +263,6 @@ void ModuleSceneIntro::CreateCircuit()
 	PhysBody3D* segmentbody20 = App->physics->AddBody(segment20, 0.0f);
 	circuitbody_list.add(segmentbody20);
 
-	/*
-	//21thSegment
-	Cube segment21(5, 1, 9);
-	segment21.SetPos(37, 37.92f, -34);
-	segment21.SetRotation(-12, { 0, 0, 1 });
-	segment21.color.Set(0.5f, 0, 0);
-	circuitcube_list.add(segment21);
-	PhysBody3D* segmentbody21 = App->physics->AddBody(segment21, 0.0f);
-	circuitbody_list.add(segmentbody21);
-	*/
 }
 
 void ModuleSceneIntro::CreateObstacles()
@@ -340,14 +335,92 @@ void ModuleSceneIntro::CreateObstacles()
 	PhysBody3D* obstaclebody8 = App->physics->AddBody(obstacle8, 0.0f);
 	obstaclebody_list.add(obstaclebody8);
 
+	
 	//9thObstacle
-	Cube obstacle9(1, 3, 9);
-	obstacle9.SetPos(22, 3, 90);
-	obstacle9.SetRotation(45, { 0, 1, 0 });
+	Cube obstacle9(1, 4, 9);
+	obstacle9.SetPos(11, 39.46f, -34);
 	obstacle9.color.Set(0, 0, 0.5f);
 	obstaclecube_list.add(obstacle9);
 	PhysBody3D* obstaclebody9 = App->physics->AddBody(obstacle9, 0.0f);
 	obstaclebody_list.add(obstaclebody9);
+}
+
+void ModuleSceneIntro::CreateDynObstacles()
+{
+	//SpinningCube
+	p_spinningcube.size.Set(1, 5, 20);
+	p_spinningcube.SetPos(114, 40.92f, -34);
+	p_spinningcube.SetRotation(45, { 0, 1, 0 });
+	p_spinningcube.color.Set(0, 0.5f, 0);
+	pb_spinningcube = App->physics->AddBody(p_spinningcube, 0.0f);
+
+	//Pendulum
+	p_pendulum.radius = 3;
+	p_pendulum.SetPos(24, 42, -15);
+	p_pendulum.color.Set(0, 0.5f, 0);
+	pb_pendulum = App->physics->AddBody(p_pendulum, 1.5f);
+
+	p_panchor.radius = 0.5f;
+	p_panchor.SetPos(24, 75, -34);
+	p_panchor.color.Set(0, 0.5f, 0);
+	pb_panchor = App->physics->AddBody(p_panchor, 0.0f);
+
+	App->physics->AddConstraintHinge(*pb_pendulum, *pb_panchor, { 0, 32, 0 }, { 0, 0, 0 }, { 1, 0, 0 }, { -1, 0, 0 });
+
+	//Door1
+	p_door1.size.Set(1.0f, 2, 6.0f);
+	p_door1.SetPos(14, 4.7f, 88.5f);
+	p_door1.color.Set(0, 0.5f, 0);
+	pb_door1 = App->physics->AddBody(p_door1, 1000.0f);
+
+	p_d1anchor.radius = 0.25f;
+	p_d1anchor.SetPos(14, 4.7f, 83.5f);
+	p_d1anchor.color.Set(0, 0.5f, 0);
+	pb_d1anchor = App->physics->AddBody(p_d1anchor, 0.0f);
+
+	App->physics->AddConstraintHinge(*pb_door1, *pb_d1anchor, { 0, 0, -2.5f }, { 0, 0, 2.5f }, { 0, 1, 0 }, { 0, 1, 0 });
+	pb_door1->GetTransform(origin_door1.M);
+
+	//Door2
+	p_door2.size.Set(1.0f, 2, 6.0f);
+	p_door2.SetPos(20, 4.7f, 91.5f);
+	p_door2.color.Set(0, 0.5f, 0);
+	pb_door2 = App->physics->AddBody(p_door2, 1000.0f);
+
+	p_d2anchor.radius = 0.25f;
+	p_d2anchor.SetPos(20, 4.7f, 96.5f);
+	p_d2anchor.color.Set(0, 0.5f, 0);
+	pb_d2anchor = App->physics->AddBody(p_d2anchor, 0.0f);
+
+	App->physics->AddConstraintHinge(*pb_door2, *pb_d2anchor, { 0, 0, 2.5f }, { 0, 0, -2.5f }, { 0, 1, 0 }, { 0, 1, 0 });
+	pb_door2->GetTransform(origin_door2.M);
 
 }
 
+void ModuleSceneIntro::UpdateDynObstacles()
+{
+	//SpinningCube
+	mat4x4 rotation = p_spinningcube.transform;
+	rotation.rotate(angle, { 0, 1, 0 });
+	p_spinningcube.Render();
+	p_spinningcube.transform = rotation;
+	pb_spinningcube->SetTransform(rotation.M);
+	angle -= 1;
+
+	//Pendulum
+	pb_pendulum->GetTransform(p_pendulum.transform.M);
+	p_pendulum.Render();
+
+	//Doors
+	pb_door1->GetTransform(p_door1.transform.M);
+	p_door1.Render();
+
+	pb_door2->GetTransform(p_door2.transform.M);
+	p_door2.Render();
+}
+
+void ModuleSceneIntro::ResetDynObstacles()
+{
+	pb_door1->SetTransform(origin_door1.M);
+	pb_door2->SetTransform(origin_door2.M);
+}

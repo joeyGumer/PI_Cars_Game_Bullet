@@ -120,12 +120,14 @@ update_status ModulePlayer::Update(float dt)
 	{
 		vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
 		vehicle->SetTransform(origin.M);
+		App->scene_intro->ResetDynObstacles();
 	}
 
 	if (vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
 	{
 		vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
 		vehicle->SetTransform(origin.M);
+		App->scene_intro->ResetDynObstacles();
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)

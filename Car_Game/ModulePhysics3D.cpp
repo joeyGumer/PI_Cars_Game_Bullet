@@ -129,7 +129,7 @@ update_status ModulePhysics3D::Update(float dt)
 
 		if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		{
-			Cylinder s(8,3);
+			Sphere s(1);
 			//s.SetRotation(90, { 0, 0, 1 });
 			s.SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 			float force = 30.0f;
@@ -356,6 +356,7 @@ void ModulePhysics3D::AddConstraintHinge(PhysBody3D& bodyA, PhysBody3D& bodyB, c
 		btVector3(axisB.x, axisB.y, axisB.z));
 
 	world->addConstraint(hinge, disable_collision);
+
 	constraints.add(hinge);
 	hinge->setDbgDrawSize(2.0f);
 }

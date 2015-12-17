@@ -23,9 +23,14 @@ public:
 
 	void CreateCircuit();
 	void CreateObstacles();
+	void CreateDynObstacles();
+
+	void UpdateDynObstacles();
+	void ResetDynObstacles();
 
 public:
 
+	//Car
 	PhysBody3D* pb_chassis;
 	Cube p_chassis;
 
@@ -38,14 +43,35 @@ public:
 	PhysMotor3D* left_wheel;
 	PhysMotor3D* right_wheel;
 
+	//Circuit
 	p2List<PhysBody3D*> circuitbody_list;
-	p2List<PhysBody3D*> obstaclebody_list;
 	p2List<Cube> circuitcube_list;
+
+	//Static Obstacles
+	p2List<PhysBody3D*> obstaclebody_list;
 	p2List<Cylinder> obstaclecylinder_list;
 	p2List<Cube> obstaclecube_list;
 
+	//Dynamic Obstacles
 	PhysBody3D* pb_spinningcube;
 	Cube p_spinningcube;
+	int angle;
 
+	PhysBody3D* pb_pendulum;
+	Sphere p_pendulum;
+	PhysBody3D* pb_panchor;
+	Sphere p_panchor;
+
+	PhysBody3D* pb_door1;
+	Cube p_door1;
+	mat4x4 origin_door1;
+	PhysBody3D* pb_d1anchor;
+	Sphere p_d1anchor;
+
+	PhysBody3D* pb_door2;
+	Cube p_door2;
+	mat4x4 origin_door2;
+	PhysBody3D* pb_d2anchor;
+	Sphere p_d2anchor;
 
 };
