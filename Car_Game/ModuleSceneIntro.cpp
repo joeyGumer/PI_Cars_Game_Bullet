@@ -28,6 +28,8 @@ bool ModuleSceneIntro::Start()
 
 	play_timer.Start();
 
+	App->audio->PlayMusic("Game/sans.ogg");
+
 	return ret;
 }
 
@@ -108,11 +110,14 @@ update_status ModuleSceneIntro::Update(float dt)
 				lap3.Render();
 				if (lap_count > 3)
 				{
-					//Have to make to only record the best time not the last
 					play_timer.Stop();
-					best_time_sec = play_timer.Read()/1000;
-					best_time_min = best_time_sec / 60;
-					best_time_sec = best_time_sec % 60;
+
+					if (best_time_sec == 0 || play_timer.Read() / 1000 < best_time_sec)
+					{
+						best_time_sec = play_timer.Read() / 1000;
+						best_time_min = best_time_sec / 60;
+					}
+
 					lap_count = 1;
 					play_timer.Start();
 				}
@@ -133,9 +138,8 @@ update_status ModuleSceneIntro::Update(float dt)
 	char title[80];
 	int sec = play_timer.Read() / 1000;
 	int min = sec/60;
-	sec = sec % 60;
 
-	sprintf_s(title, "Lap: %d / %d ---- Time: %d min %d sec --- Best time: %d min %d sec", lap_count, NUM_LAPS, min, sec, best_time_min, best_time_sec);
+	sprintf_s(title, "Lap: %d / %d ---- Time: %d min %d sec --- Best time: %d min %d sec", lap_count, NUM_LAPS, min, sec % 60, best_time_min, best_time_sec % 60);
 	App->window->SetTitle(title);
 
 	return UPDATE_CONTINUE;
