@@ -51,6 +51,7 @@ public:
 	p2List<PhysBody3D*> obstaclebody_list;
 	p2List<Cylinder> obstaclecylinder_list;
 	p2List<Cube> obstaclecube_list;
+	p2List<Sphere> obstaclesphere_list;
 
 	//Dynamic Obstacles
 	PhysBody3D* pb_spinningcube;

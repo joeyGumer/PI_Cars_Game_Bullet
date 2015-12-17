@@ -60,12 +60,21 @@ update_status ModuleSceneIntro::Update(float dt)
 		tmp2 = tmp2->next;
 	}
 
+	
 	p2List_item<Cube>* tmp3;
 	tmp3 = obstaclecube_list.getFirst();
 	while (tmp3 != NULL)
 	{
 		tmp3->data.Render();
 		tmp3 = tmp3->next;
+	}
+	
+	p2List_item<Sphere>* tmp4;
+	tmp4 = obstaclesphere_list.getFirst();
+	while (tmp4 != NULL)
+	{
+		tmp4->data.Render();
+		tmp4 = tmp4->next;
 	}
 
 	UpdateDynObstacles();
@@ -343,6 +352,55 @@ void ModuleSceneIntro::CreateObstacles()
 	obstaclecube_list.add(obstacle9);
 	PhysBody3D* obstaclebody9 = App->physics->AddBody(obstacle9, 0.0f);
 	obstaclebody_list.add(obstaclebody9);
+
+	//10thObstacle
+	Sphere obstacle10(1);
+	obstacle10.SetPos(-9, 3, 67);
+	obstacle10.color.Set(0, 0, 0.5f);
+	obstaclesphere_list.add(obstacle10);
+	PhysBody3D* obstaclebody10 = App->physics->AddBody(obstacle10, 0.0f);
+	obstaclebody_list.add(obstaclebody10);
+
+	//11thObstacle
+	Sphere obstacle11(1);
+	obstacle11.SetPos(-10, 3, 74);
+	obstacle11.color.Set(0, 0, 0.5f);
+	obstaclesphere_list.add(obstacle11);
+	PhysBody3D* obstaclebody11 = App->physics->AddBody(obstacle11, 0.0f);
+	obstaclebody_list.add(obstaclebody11);
+
+	//12thObstacle
+	Sphere obstacle12(1);
+	obstacle12.SetPos(-4, 3, 77);
+	obstacle12.color.Set(0, 0, 0.5f);
+	obstaclesphere_list.add(obstacle12);
+	PhysBody3D* obstaclebody12 = App->physics->AddBody(obstacle12, 0.0f);
+	obstaclebody_list.add(obstaclebody12);
+
+	//13thObstacle
+	Sphere obstacle13(1.5f);
+	obstacle13.SetPos(-14, 3, 67);
+	obstacle13.color.Set(0, 0, 0.5f);
+	obstaclesphere_list.add(obstacle13);
+	PhysBody3D* obstaclebody13 = App->physics->AddBody(obstacle13, 0.0f);
+	obstaclebody_list.add(obstaclebody13);
+
+	//14thObstacle
+	Sphere obstacle14(1.5f);
+	obstacle14.SetPos(-6, 3, 72);
+	obstacle14.color.Set(0, 0, 0.5f);
+	obstaclesphere_list.add(obstacle14);
+	PhysBody3D* obstaclebody14 = App->physics->AddBody(obstacle14, 0.0f);
+	obstaclebody_list.add(obstaclebody14);
+
+	//15thObstacle
+	Sphere obstacle15(1.5f);
+	obstacle15.SetPos(-8, 3, 79);
+	obstacle15.color.Set(0, 0, 0.5f);
+	obstaclesphere_list.add(obstacle15);
+	PhysBody3D* obstaclebody15 = App->physics->AddBody(obstacle15, 0.0f);
+	obstaclebody_list.add(obstaclebody15);
+
 }
 
 void ModuleSceneIntro::CreateDynObstacles()
