@@ -24,11 +24,30 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEvent pevent);
 
+	//Put this on private?
 	void CreateCircuit();
 	void CreateCheckpoints();
+	void CreateObstacles();
+	void CreateDynObstacles();
+
+	void UpdateDynObstacles();
+	void ResetDynObstacles();
+
 
 public:
 
+	//Scene variables (not objects)
+
+	int next_checkpoint_index = 0;
+	int lap_count = 1;
+
+	Timer play_timer;
+	int best_time_min = 0;
+	int best_time_sec = 0;
+
+	bool debug = false;
+
+	//Car
 	PhysBody3D* pb_chassis;
 	Cube p_chassis;
 
@@ -41,20 +60,42 @@ public:
 	PhysMotor3D* left_wheel;
 	PhysMotor3D* right_wheel;
 
+	//Circuit
 	p2List<PhysBody3D*> circuitbody_list;
 	p2List<Cube> circuitcube_list;
-	
-	//p2List<Cylinder> circuitcylinder_list;
 
+	
+	//CheckPoint
 	p2List<PhysBody3D*> pb_checkpoint_list;
 	p2List<Cube> checkpoint_list;
 
-	int next_checkpoint_index = 0;
-	int lap_count = 1;
+	//Static Obstacles
+	p2List<PhysBody3D*> obstaclebody_list;
+	p2List<Cylinder> obstaclecylinder_list;
+	p2List<Cube> obstaclecube_list;
+	p2List<Sphere> obstaclesphere_list;
 
-	Timer play_timer;
-	int best_time_min = 0;
-	int best_time_sec = 0;
+	//Dynamic Obstacles
+	PhysBody3D* pb_spinningcube;
+	Cube p_spinningcube;
+	int angle;
 
-	bool debug = false;
+	PhysBody3D* pb_pendulum;
+	Sphere p_pendulum;
+	PhysBody3D* pb_panchor;
+	Sphere p_panchor;
+
+	PhysBody3D* pb_door1;
+	Cube p_door1;
+	mat4x4 origin_door1;
+	PhysBody3D* pb_d1anchor;
+	Sphere p_d1anchor;
+
+	PhysBody3D* pb_door2;
+	Cube p_door2;
+	mat4x4 origin_door2;
+	PhysBody3D* pb_d2anchor;
+	Sphere p_d2anchor;
+
+
 };
