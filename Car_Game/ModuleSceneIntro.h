@@ -3,8 +3,10 @@
 #include "p2DynArray.h"
 #include "Globals.h"
 #include "Primitive.h"
+#include "Timer.h"
 
-#define MAX_SNAKE 2
+#define NUM_CHECKPOINTS 2
+#define NUM_LAPS 3
 
 struct PhysBody3D;
 struct PhysMotor3D;
@@ -46,6 +48,13 @@ public:
 
 	p2List<PhysBody3D*> pb_checkpoint_list;
 	p2List<Cube> checkpoint_list;
+
+	int next_checkpoint_index = 0;
+	int lap_count = 1;
+
+	Timer play_timer;
+	int best_time_min = 0;
+	int best_time_sec = 0;
 
 	bool debug = false;
 };

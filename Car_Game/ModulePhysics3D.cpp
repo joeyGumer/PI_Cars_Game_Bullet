@@ -98,41 +98,44 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 			{
 				pbodyA->is_colliding = pbodyB->is_colliding = true;
 
-				if (pbodyA->was_colliding == false && pbodyB->was_colliding == false)
-				{
-					p2List_item<Module*>* item = pbodyA->collision_listeners.getFirst();
-					while (item)
+					if (pbodyA->was_colliding == false)
 					{
-						item->data->OnCollision(pbodyA, pbodyB, BEGIN_CONTACT);
-						item = item->next;
+						p2List_item<Module*>* item = pbodyA->collision_listeners.getFirst();
+						while (item)
+						{
+							item->data->OnCollision(pbodyA, pbodyB, BEGIN_CONTACT);
+							item = item->next;
+						}
+
+						pbodyA->was_colliding = true;
 					}
 
-					item = pbodyB->collision_listeners.getFirst();
-					while (item)
+					if (pbodyB->was_colliding == false)
 					{
-						item->data->OnCollision(pbodyB, pbodyA, BEGIN_CONTACT);
-						item = item->next;
-					}
-				}
-				
-				pbodyA->was_colliding = pbodyB->was_colliding = true;
+						p2List_item<Module*>*item = pbodyB->collision_listeners.getFirst();
+						while (item)
+						{
+							item->data->OnCollision(pbodyB, pbodyA, BEGIN_CONTACT);
+							item = item->next;
+						}
+
+						pbodyB->was_colliding = true;
+					}		
 			}
 		}
 	}
 
 	//END CONTACT
-	p2List_item<PhysBody3D*>* tmp = bodies.getFirst();
+	tmp = bodies.getFirst();
 	for (; tmp; tmp = tmp->next)
-		if (tmp->data->is_colliding == false && tmp->data->was_colliding == true)
+		if (tmp->data->is_colliding == false)
 		{
-
+			tmp->data->was_colliding = false;
 			/*p2List_item<Module*>* listener = tmp->data->collision_listeners.getFirst();
 			for (; listener; listener = listener->next)
 			{
 				listener->data->OnCollision(tmp->data, NULL, END_CONTACT);
 			}*/
-
-			tmp->data->was_colliding = false;
 		}
 
 	return UPDATE_CONTINUE;

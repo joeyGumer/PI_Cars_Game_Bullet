@@ -6,6 +6,7 @@
 #include "ModulePlayer.h"
 
 
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -24,6 +25,8 @@ bool ModuleSceneIntro::Start()
 
 	CreateCircuit();
 	CreateCheckpoints();
+
+	play_timer.Start();
 
 	return ret;
 }
@@ -44,24 +47,79 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	/*if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 
 	Plane p(0, 1, 0, 0);
-	p.axis = true;
+	p.color.Set(0, 255, 255);
 	p.Render();
 	
-	/*p2List_item<Cube>* tmp;
+	p2List_item<Cube>* tmp;
 	tmp = circuitcube_list.getFirst();
 	for (; tmp; tmp = tmp->next)
 		tmp->data.Render();
 
-	/*if (debug)
+	if (debug)
 	{
 		tmp = checkpoint_list.getFirst();
 		for (; tmp; tmp = tmp->next)
 			tmp->data.Render();
-	}*/
+	}
+	
+	//Put all the painting functions on a simple function
+	Cube post1(1, 9, 1);
+	post1.SetPos(-5 , 7,0);
+	post1.color = Blue;
+	post1.Render();
+
+	Cube post2(1, 9, 1);
+	post2.SetPos(5, 7, 0);
+	post2.color = Blue;
+	post2.Render();
+
+	Cube flag(9, 2, 1);
+	flag.SetPos(0, 10.5f, 0);
+	flag.color = Green;
+	flag.Render();
+
+	Cube paint1(9, 0, 1);
+	paint1.SetPos(0, 3.55f, 0);
+	//paint1.color = Blue;
+	paint1.Render();
+
+	Cube paint2(9, 0, 1);
+	paint2.SetPos(10, 38.5f, -34);
+	paint2.SetRotation(-90, { 0, 1, 0 });
+	//paint1.color = Blue;
+	paint2.Render();
+
+		Sphere lap1(1);
+		lap1.SetPos(3, 10.5f, 0);
+		lap1.Render();
+		if (lap_count >= 2)
+		{
+			Sphere lap2(1);
+			lap2.SetPos(0, 10.5f, 0);
+			lap2.Render();
+			if (lap_count >= 3)
+			{
+				Sphere lap3(1);
+				lap3.SetPos(-3, 10.5f, 0);
+				lap3.Render();
+				if (lap_count > 3)
+				{
+					//Have to make to only record the best time not the last
+					play_timer.Stop();
+					best_time_sec = play_timer.Read()/1000;
+					best_time_min = best_time_sec / 60;
+					best_time_sec = best_time_sec % 60;
+					lap_count = 1;
+					play_timer.Start();
+				}
+			}
+		}
+			
+	
 
 	//p2List_item<Cylinder>* tmp2;
 	
@@ -72,17 +130,36 @@ update_status ModuleSceneIntro::Update(float dt)
 		tmp2 = tmp2->next;
 	}*/
 
+	char title[80];
+	int sec = play_timer.Read() / 1000;
+	int min = sec/60;
+	sec = sec % 60;
+
+	sprintf_s(title, "Lap: %d / %d ---- Time: %d min %d sec --- Best time: %d min %d sec", lap_count, NUM_LAPS, min, sec, best_time_min, best_time_sec);
+	App->window->SetTitle(title);
+
 	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEvent pevent)
 {
 	//Provisional
-	if (body1->IsSensor() && body2 == pb_chassis)
+	if (body1->IsSensor() /*&& body2 == pb_chassis*/)
 	{
 		if (pevent == BEGIN_CONTACT)
 		{
-			App->player->last_checkpoint = body1;
+			if (next_checkpoint_index != pb_checkpoint_list.find(body1))
+			{
+				App->player->last_checkpoint = body1;
+				next_checkpoint_index++;
+				
+				if (next_checkpoint_index == NUM_CHECKPOINTS)
+				{
+					next_checkpoint_index = 0;
+					lap_count++;
+				}
+			}
+			
 		}
 	}
 }
@@ -99,7 +176,7 @@ void ModuleSceneIntro::CreateCheckpoints()
 	pb_checkpoint1->collision_listeners.add(this);
 	pb_checkpoint_list.add(pb_checkpoint1);
 
-	//last_checkpoint = pb_checkpoint1;
+	App->player->last_checkpoint = pb_checkpoint1;
 
 	//Checkpoint 2
 	Cube checkpoint2(9, 5, 1);
@@ -112,7 +189,7 @@ void ModuleSceneIntro::CreateCheckpoints()
 	pb_checkpoint2->collision_listeners.add(this);
 	pb_checkpoint_list.add(pb_checkpoint2);
 
-	last_checkpoint = pb_checkpoint2;
+	
 
 }
 void ModuleSceneIntro::CreateCircuit()
