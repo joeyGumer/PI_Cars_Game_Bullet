@@ -3,8 +3,8 @@
 #include "Globals.h"
 #include "glmath.h"
 
-#define CAMERA_DISTANCE 10
-#define CAMERA_HEIGHT 5
+#define CAMERA_DISTANCE 20
+#define CAMERA_HEIGHT 10
 
 class btQuaternion;
 class ModuleCamera3D : public Module
