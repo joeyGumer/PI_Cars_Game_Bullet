@@ -4,7 +4,7 @@
 #include "Primitive.h"
 #include "PhysBody3D.h"
 #include "ModulePlayer.h"
-#include "PhysVehicle3D.h"
+
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -44,25 +44,24 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		debug = !debug;
+
 	Plane p(0, 1, 0, 0);
 	p.axis = true;
 	p.Render();
-
-	p2List_item<Cube>* tmp;
+	
+	/*p2List_item<Cube>* tmp;
 	tmp = circuitcube_list.getFirst();
 	for (; tmp; tmp = tmp->next)
 		tmp->data.Render();
 
-	tmp = checkpoint_list.getFirst();
-	for (; tmp; tmp = tmp->next)
-		tmp->data.Render();
-
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	/*if (debug)
 	{
-		mat4x4 transform = IdentityMatrix;
-		last_checkpoint->GetTransform(&transform);
-		App->player->vehicle->SetTransform(&transform);
-	}
+		tmp = checkpoint_list.getFirst();
+		for (; tmp; tmp = tmp->next)
+			tmp->data.Render();
+	}*/
 
 	//p2List_item<Cylinder>* tmp2;
 	
@@ -79,11 +78,11 @@ update_status ModuleSceneIntro::Update(float dt)
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEvent pevent)
 {
 	//Provisional
-	if (/*body1 == App->player->vehicle &&*/ body1->IsSensor())
+	if (body1->IsSensor() && body2 == pb_chassis)
 	{
 		if (pevent == BEGIN_CONTACT)
 		{
-			last_checkpoint = body1;
+			App->player->last_checkpoint = body1;
 		}
 	}
 }

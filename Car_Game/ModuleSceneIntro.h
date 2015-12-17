@@ -47,5 +47,5 @@ public:
 	p2List<PhysBody3D*> pb_checkpoint_list;
 	p2List<Cube> checkpoint_list;
 
-	PhysBody3D* last_checkpoint = NULL;
+	bool debug = false;
 };
