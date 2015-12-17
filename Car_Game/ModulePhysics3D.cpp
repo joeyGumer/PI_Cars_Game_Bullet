@@ -77,11 +77,11 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 
 	int numManifolds = world->getDispatcher()->getNumManifolds();
 
-	/*p2List_item<PhysBody3D*>* tmp = bodies.getFirst();
+	p2List_item<PhysBody3D*>* tmp = bodies.getFirst();
 	for (; tmp; tmp = tmp->next)
-		tmp->data->is_colliding = false;*/
+		tmp->data->is_colliding = false;
 	
-
+	//BEGIN CONTACT
 	for(int i = 0; i<numManifolds; i++)
 	{
 		btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
@@ -96,29 +96,47 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 
 			if(pbodyA && pbodyB)
 			{
-				//pbodyA->is_colliding = pbodyB->is_colliding = true;
+				pbodyA->is_colliding = pbodyB->is_colliding = true;
 
-				//if (pbodyA->was_colliding == false && pbodyB->was_colliding == false)
-				//{
-					p2List_item<Module*>* item = pbodyA->collision_listeners.getFirst();
-					while (item)
+					if (pbodyA->was_colliding == false)
 					{
-						item->data->OnCollision(pbodyA, pbodyB, BEGIN_CONTACT);
-						item = item->next;
+						p2List_item<Module*>* item = pbodyA->collision_listeners.getFirst();
+						while (item)
+						{
+							item->data->OnCollision(pbodyA, pbodyB, BEGIN_CONTACT);
+							item = item->next;
+						}
+
+						pbodyA->was_colliding = true;
 					}
 
-					item = pbodyB->collision_listeners.getFirst();
-					while (item)
+					if (pbodyB->was_colliding == false)
 					{
-						item->data->OnCollision(pbodyB, pbodyA, BEGIN_CONTACT);
-						item = item->next;
-					}
-				//}
-				
-				//pbodyA->was_colliding = pbodyB->was_colliding = true;
+						p2List_item<Module*>*item = pbodyB->collision_listeners.getFirst();
+						while (item)
+						{
+							item->data->OnCollision(pbodyB, pbodyA, BEGIN_CONTACT);
+							item = item->next;
+						}
+
+						pbodyB->was_colliding = true;
+					}		
 			}
 		}
 	}
+
+	//END CONTACT
+	tmp = bodies.getFirst();
+	for (; tmp; tmp = tmp->next)
+		if (tmp->data->is_colliding == false)
+		{
+			tmp->data->was_colliding = false;
+			/*p2List_item<Module*>* listener = tmp->data->collision_listeners.getFirst();
+			for (; listener; listener = listener->next)
+			{
+				listener->data->OnCollision(tmp->data, NULL, END_CONTACT);
+			}*/
+		}
 
 	return UPDATE_CONTINUE;
 }

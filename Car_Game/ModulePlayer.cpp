@@ -116,12 +116,14 @@ update_status ModulePlayer::Update(float dt)
 	turn = acceleration = brake = 0.0f;
 
 	
-	/*
+	
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_UP)
 	{
-		vehicle->SetTransform(origin.M);
+		mat4x4 transform = IdentityMatrix;
+		last_checkpoint->GetTransform(&transform);
+		App->player->vehicle->SetTransform(&transform);
 	}
-	*/
+	
 	
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -153,9 +155,9 @@ update_status ModulePlayer::Update(float dt)
 
 	vehicle->Render();
 
-	char title[80];
+	/*char title[80];
 	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
-	App->window->SetTitle(title);
+	App->window->SetTitle(title);*/
 
 	//----------------
 	

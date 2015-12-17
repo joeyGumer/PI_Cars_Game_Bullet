@@ -19,9 +19,9 @@ public:
 	void SetTransform(const float* matrix) const;
 	void SetPos(float x, float y, float z);
 	void SetAsSensor(bool is_sensor);
-	bool IsSensor(){ return is_sensor; }
+	bool IsSensor()const{ return is_sensor; }
 	//provisional, to see if it works
-	btRigidBody* GetBody(){ return body; }
+	btRigidBody* GetBody()const { return body; }
 	
 
 private:
