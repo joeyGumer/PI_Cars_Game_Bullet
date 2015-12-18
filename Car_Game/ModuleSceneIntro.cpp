@@ -163,7 +163,7 @@ void ModuleSceneIntro::RenderScene()
 	paint2.Render();
 
 	Cube paint3(9, 0, 1);
-	paint3.SetPos(-10, 38.5f, -34);
+	paint3.SetPos(-37, 38.5f, -34);
 	paint3.SetRotation(-90, { 0, 1, 0 });
 	paint3.Render();
 
@@ -231,7 +231,7 @@ void ModuleSceneIntro::CreateCheckpoints()
 
 	//Checkpoint 3
 	Cube checkpoint3(9, 5, 1);
-	checkpoint3.SetPos(-10, 40.92f, -34);
+	checkpoint3.SetPos(-37, 40.92f, -34);
 	checkpoint3.SetRotation(-90, { 0, 1, 0 });
 	checkpoint3.color = Green;
 	checkpoint_list.add(checkpoint3);
