@@ -4,10 +4,12 @@
 #include "Primitive.h"
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
+#include "ModuleCamera3D.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
 	turn = acceleration = brake = 0.0f;
+	isJumping = false;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -22,17 +24,17 @@ bool ModulePlayer::Start()
 
 	// Car properties ----------------------------------------
 	car.chassis_size.Set(2, 0.5, 4);
-	car.chassis_offset.Set(0, 0.8, 0);
+	car.chassis_offset.Set(0, 0.5, 0);
 	car.mass = 1000.0f;
 	car.suspensionStiffness = 100.88f;
-	car.suspensionCompression = 0.83f;
+	car.suspensionCompression = 3.0f;
 	car.suspensionDamping = 0.88f;
 	car.maxSuspensionTravelCm = 1000.0f;
 	car.frictionSlip = 2000.5;
-	car.maxSuspensionForce = 2300.0f;
+	car.maxSuspensionForce = 5000.0f;
 
 	// Wheel properties ---------------------------------------
-	float connection_height = 1.7f;
+	float connection_height = 1.5f;
 	float wheel_radius = 0.4f;
 	float wheel_width = 0.5f;
 	float suspensionRestLength = 1.2f;
@@ -97,7 +99,7 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	vehicle = App->physics->AddVehicle(car);
-	vehicle->SetPos(0, 5, 2);
+	vehicle->SetPos(0, 3, 2);
 	vehicle->GetTransform(origin.M);
 	return true;
 }
@@ -117,12 +119,17 @@ update_status ModulePlayer::Update(float dt)
 
 	
 	
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_UP)
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN || vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
 	{
-		mat4x4 transform = IdentityMatrix;
-		last_checkpoint->GetTransform(&transform);
-		App->player->vehicle->SetTransform(&transform);
+		Reset();
 	}
+
+	/*if (vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
+	{
+		vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
+		vehicle->SetTransform(origin.M);
+		App->scene_intro->ResetDynObstacles();
+	}*/
 	
 	
 
@@ -146,7 +153,12 @@ update_status ModulePlayer::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
 		acceleration = -MAX_ACCELERATION * 0.5;
-		//brake = BRAKE_POWER;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN && !isJumping)
+	{
+		vehicle->GetBody()->applyCentralForce({ 0, 500000, 0 });
+		isJumping = true;
 	}
 
 	vehicle->ApplyEngineForce(acceleration);
@@ -165,5 +177,16 @@ update_status ModulePlayer::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModulePlayer::Reset()
+{
+	mat4x4 transform = IdentityMatrix;
+	last_checkpoint->GetTransform(&transform);
+	vehicle->SetTransform(&transform);
+	//App->camera->Position = vehicle->GetBody()->getWorldTransform().getOrigin();
+	vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
+	App->scene_intro->ResetDynObstacles();
 
+
+
+}
 

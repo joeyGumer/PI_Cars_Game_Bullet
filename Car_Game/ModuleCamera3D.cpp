@@ -207,7 +207,7 @@ update_status ModuleCamera3D::Update(float dt)
 			}
 		}
 
-		if (first_person)
+		/*if (first_person)
 		{
 			btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
 			btVector3 vehicle_pos = (transform.getOrigin());
@@ -227,7 +227,7 @@ update_status ModuleCamera3D::Update(float dt)
 			Position = Position = camera_ref + Z* -2;
 
 			//ADD something for when it changes to third person from first person, because it's not smooth at all
-		}
+		}*/
 	}
 
 	// Recalculate matrix -------------
