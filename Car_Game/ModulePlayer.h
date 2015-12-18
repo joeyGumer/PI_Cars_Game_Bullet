@@ -35,4 +35,8 @@ public:
 	PhysBody3D* last_checkpoint = NULL;
 
 	bool isJumping;
+
+	//SoundFX
+	int jumpFX;
+	int crash2FX;
 };

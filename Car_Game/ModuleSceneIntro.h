@@ -100,5 +100,10 @@ public:
 	PhysBody3D* pb_d2anchor;
 	Sphere p_d2anchor;
 
+	//SoundFX
+	int lapFX;
+	int checkpointFX;
+	int victoryFX;
+	int crash1FX;
 
 };

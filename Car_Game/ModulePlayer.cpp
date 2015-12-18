@@ -102,6 +102,10 @@ bool ModulePlayer::Start()
 	vehicle = App->physics->AddVehicle(car);
 	vehicle->SetPos(0, 3, 2);
 	vehicle->GetTransform(origin.M);
+
+	jumpFX = App->audio->LoadFx("Game/SoundFX/jump.wav");
+	crash2FX = App->audio->LoadFx("Game/SoundFX/crash2.wav");
+
 	return true;
 }
 
@@ -124,8 +128,7 @@ update_status ModulePlayer::Update(float dt)
 	{
 		if (vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
 		{
-			//TOIAN
-			//App->audio->PlayFx(fall.wav);
+			App->audio->PlayFx(crash2FX);
 		}
 		Reset();
 	}
@@ -138,13 +141,13 @@ update_status ModulePlayer::Update(float dt)
 	}*/
 	
 	
-	//TOIAN
-	//Posa aqui els wav de moviment
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
 		acceleration = MAX_ACCELERATION;
+
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
 			acceleration = MAX_ACCELERATION * 2;
+				
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
@@ -170,9 +173,7 @@ update_status ModulePlayer::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN && !isJumping)
 	{
 		vehicle->GetBody()->applyCentralForce({ 0, 500000, 0 });
-		//TOIAN
-		//App->audio->PlayFx(jump.wav);
-
+		App->audio->PlayFx(jumpFX);
 		isJumping = true;
 	}
 

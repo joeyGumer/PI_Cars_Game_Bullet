@@ -30,8 +30,13 @@ bool ModuleSceneIntro::Start()
 
 	angle = 0;
 
-	//App->audio->PlayMusic("Game/sans.ogg");
+	App->audio->PlayMusic("Game/sans.ogg");
 	play_timer.Start();
+
+	lapFX = App->audio->LoadFx("Game/SoundFX/lap.wav");
+	checkpointFX = App->audio->LoadFx("Game/SoundFX/checkpoint.wav");
+	victoryFX = App->audio->LoadFx("Game/SoundFX/victory.wav");
+	crash1FX = App->audio->LoadFx("Game/SoundFX/crash1.wav");
 
 	return ret;
 }
@@ -87,13 +92,11 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEve
 				{
 					next_checkpoint_index = 0;
 					lap_count++;
-					//TOIAN
-					//App->audio->PlayFx(lap.wav);
+					App->audio->PlayFx(lapFX);
 				}
 				else
 				{
-					//TOIAN
-					//App->audio->PlayFx(checkpoint.wav);
+					App->audio->PlayFx(checkpointFX);
 				}
 			}
 			
@@ -105,8 +108,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEve
 		if (pevent == BEGIN_CONTACT)
 		{
 			App->player->isJumping = false;
-			//TOIAN
-			//App->audio->PlayFx(choque.wav);
+			App->audio->PlayFx(crash1FX);
 		}
 	}
 }
@@ -194,8 +196,7 @@ void ModuleSceneIntro::RenderScene()
 					best_time_sec = play_timer.Read() / 1000;
 					best_time_min = best_time_sec / 60;
 				}
-				//TOIAN
-				//App->audio->PlayFx(finish.wav);
+				App->audio->PlayFx(victoryFX);
 
 				lap_count = 1;
 				App->player->Reset();
