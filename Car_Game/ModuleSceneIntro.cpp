@@ -81,10 +81,19 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEve
 				App->player->last_checkpoint = body1;
 				next_checkpoint_index++;
 				
+			
+				
 				if (next_checkpoint_index == NUM_CHECKPOINTS)
 				{
 					next_checkpoint_index = 0;
 					lap_count++;
+					//TOIAN
+					//App->audio->PlayFx(lap.wav);
+				}
+				else
+				{
+					//TOIAN
+					//App->audio->PlayFx(checkpoint.wav);
 				}
 			}
 			
@@ -93,7 +102,12 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEve
 
 	if (!body1->IsSensor())
 	{
-		App->player->isJumping = false;
+		if (pevent == BEGIN_CONTACT)
+		{
+			App->player->isJumping = false;
+			//TOIAN
+			//App->audio->PlayFx(choque.wav);
+		}
 	}
 }
 
@@ -180,6 +194,8 @@ void ModuleSceneIntro::RenderScene()
 					best_time_sec = play_timer.Read() / 1000;
 					best_time_min = best_time_sec / 60;
 				}
+				//TOIAN
+				//App->audio->PlayFx(finish.wav);
 
 				lap_count = 1;
 				App->player->Reset();
@@ -580,14 +596,14 @@ void ModuleSceneIntro::CreateDynObstacles()
 	p_pendulum.radius = 3;
 	p_pendulum.SetPos(24, 42, -15);
 	p_pendulum.color.Set(0, 0.5f, 0);
-	pb_pendulum = App->physics->AddBody(p_pendulum, 1.5f);
+	pb_pendulum = App->physics->AddBody(p_pendulum, 5000.0f);
 
 	p_panchor.radius = 0.5f;
 	p_panchor.SetPos(24, 75, -34);
 	p_panchor.color.Set(0, 0.5f, 0);
 	pb_panchor = App->physics->AddBody(p_panchor, 0.0f);
 
-	App->physics->AddConstraintHinge(*pb_pendulum, *pb_panchor, { 0, 32, 0 }, { 0, 0, 0 }, { 1, 0, 0 }, { -1, 0, 0 });
+	App->physics->AddConstraintHinge(*pb_pendulum, *pb_panchor, { 0, 32, 0 }, { 0, 0, 0 }, { 1, 0, 0 }, { 1, 0, 0 });
 
 	//Door1
 	p_door1.size.Set(1.0f, 2, 6.0f);
@@ -628,6 +644,8 @@ void ModuleSceneIntro::UpdateDynObstacles()
 	p_spinningcube.transform = rotation;
 	pb_spinningcube->SetTransform(rotation.M);
 	angle -= 1;
+	if (angle == -360)
+		angle = 0;
 
 	//Pendulum
 	pb_pendulum->GetTransform(p_pendulum.transform.M);

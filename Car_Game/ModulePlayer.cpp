@@ -5,6 +5,7 @@
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
+#include "ModuleAudio.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
@@ -24,13 +25,13 @@ bool ModulePlayer::Start()
 
 	// Car properties ----------------------------------------
 	car.chassis_size.Set(2, 0.5, 4);
-	car.chassis_offset.Set(0, 0.5, 0);
+	car.chassis_offset.Set(0, 0.5, 0.2);
 	car.mass = 1000.0f;
 	car.suspensionStiffness = 100.88f;
 	car.suspensionCompression = 3.0f;
 	car.suspensionDamping = 0.88f;
 	car.maxSuspensionTravelCm = 1000.0f;
-	car.frictionSlip = 2000.5;
+	car.frictionSlip = 1000.5;
 	car.maxSuspensionForce = 5000.0f;
 
 	// Wheel properties ---------------------------------------
@@ -121,6 +122,11 @@ update_status ModulePlayer::Update(float dt)
 	
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN || vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
 	{
+		if (vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
+		{
+			//TOIAN
+			//App->audio->PlayFx(fall.wav);
+		}
 		Reset();
 	}
 
@@ -132,10 +138,13 @@ update_status ModulePlayer::Update(float dt)
 	}*/
 	
 	
-
+	//TOIAN
+	//Posa aqui els wav de moviment
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
 		acceleration = MAX_ACCELERATION;
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+			acceleration = MAX_ACCELERATION * 2;
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
@@ -152,12 +161,18 @@ update_status ModulePlayer::Update(float dt)
 
 	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
-		acceleration = -MAX_ACCELERATION * 0.5;
+		if (vehicle->GetKmh() > 0)
+			brake = BRAKE_POWER;
+		else
+			acceleration = -MAX_ACCELERATION * 0.5;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN && !isJumping)
 	{
 		vehicle->GetBody()->applyCentralForce({ 0, 500000, 0 });
+		//TOIAN
+		//App->audio->PlayFx(jump.wav);
+
 		isJumping = true;
 	}
 
@@ -184,6 +199,7 @@ void ModulePlayer::Reset()
 	vehicle->SetTransform(&transform);
 	//App->camera->Position = vehicle->GetBody()->getWorldTransform().getOrigin();
 	vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
+	vehicle->GetBody()->setAngularVelocity({ 0, 0, 0 });
 	App->scene_intro->ResetDynObstacles();
 
 
