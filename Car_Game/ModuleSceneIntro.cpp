@@ -147,8 +147,8 @@ void ModuleSceneIntro::RenderScene()
 	//paint1.color = Blue;
 	paint1.Render();
 	
-	Cube paint2(9, 5, 1);
-	paint2.SetPos(114, 38.5f, 14);
+	Cube paint2(9, 0, 1);
+	paint2.SetPos(114, 38.5f, 12);
 	paint2.SetRotation(180, { 0, 1, 0 });
 	paint2.Render();
 
@@ -207,7 +207,7 @@ void ModuleSceneIntro::CreateCheckpoints()
 
 	//Checkpoint 2
 	Cube checkpoint2(9, 5, 1);
-	checkpoint2.SetPos(114, 40.92f, 14);
+	checkpoint2.SetPos(114, 40.92f, 12);
 	checkpoint2.SetRotation(180, { 0, 1, 0 });
 	checkpoint2.color = Green;
 	checkpoint_list.add(checkpoint2);
