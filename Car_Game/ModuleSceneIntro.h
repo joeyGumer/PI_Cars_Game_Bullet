@@ -5,7 +5,7 @@
 #include "Primitive.h"
 #include "Timer.h"
 
-#define NUM_CHECKPOINTS 2
+#define NUM_CHECKPOINTS 3
 #define NUM_LAPS 3
 
 struct PhysBody3D;
