@@ -5,6 +5,7 @@
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
+#include "ModuleAudio.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
@@ -121,6 +122,11 @@ update_status ModulePlayer::Update(float dt)
 	
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN || vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
 	{
+		if (vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
+		{
+			//TOIAN
+			//App->audio->PlayFx(fall.wav);
+		}
 		Reset();
 	}
 
@@ -132,7 +138,8 @@ update_status ModulePlayer::Update(float dt)
 	}*/
 	
 	
-
+	//TOIAN
+	//Posa aqui els wav de moviment
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
 		acceleration = MAX_ACCELERATION;
@@ -163,6 +170,9 @@ update_status ModulePlayer::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN && !isJumping)
 	{
 		vehicle->GetBody()->applyCentralForce({ 0, 500000, 0 });
+		//TOIAN
+		//App->audio->PlayFx(jump.wav);
+
 		isJumping = true;
 	}
 
@@ -189,6 +199,7 @@ void ModulePlayer::Reset()
 	vehicle->SetTransform(&transform);
 	//App->camera->Position = vehicle->GetBody()->getWorldTransform().getOrigin();
 	vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
+	vehicle->GetBody()->setAngularVelocity({ 0, 0, 0 });
 	App->scene_intro->ResetDynObstacles();
 
 

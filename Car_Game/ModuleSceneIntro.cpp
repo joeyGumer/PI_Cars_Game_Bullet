@@ -81,10 +81,19 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEve
 				App->player->last_checkpoint = body1;
 				next_checkpoint_index++;
 				
+			
+				
 				if (next_checkpoint_index == NUM_CHECKPOINTS)
 				{
 					next_checkpoint_index = 0;
 					lap_count++;
+					//TOIAN
+					//App->audio->PlayFx(lap.wav);
+				}
+				else
+				{
+					//TOIAN
+					//App->audio->PlayFx(checkpoint.wav);
 				}
 			}
 			
@@ -93,7 +102,12 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEve
 
 	if (!body1->IsSensor())
 	{
-		App->player->isJumping = false;
+		if (pevent == BEGIN_CONTACT)
+		{
+			App->player->isJumping = false;
+			//TOIAN
+			//App->audio->PlayFx(choque.wav);
+		}
 	}
 }
 
@@ -180,6 +194,8 @@ void ModuleSceneIntro::RenderScene()
 					best_time_sec = play_timer.Read() / 1000;
 					best_time_min = best_time_sec / 60;
 				}
+				//TOIAN
+				//App->audio->PlayFx(finish.wav);
 
 				lap_count = 1;
 				App->player->Reset();
