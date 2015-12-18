@@ -113,11 +113,7 @@ update_status ModuleCamera3D::Update(float dt)
 	//OMG IT'S FUCKING AMAZING, THIS CAM FOR GOTY GAMES!
 	else
 	{
-		if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
-			first_person = !first_person;
 
-		if (!first_person)
-		{
 
 			btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
 			btVector3 vehicle_pos = (transform.getOrigin());
@@ -205,7 +201,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 				
 			}
-		}
+		
 
 		/*if (first_person)
 		{
