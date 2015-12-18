@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
+#include "ModuleCamera3D.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
@@ -116,19 +117,21 @@ update_status ModulePlayer::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_UP)
+	
+	
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN || vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
 	{
-		vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
-		vehicle->SetTransform(origin.M);
-		App->scene_intro->ResetDynObstacles();
+		Reset();
 	}
 
-	if (vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
+	/*if (vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
 	{
 		vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
 		vehicle->SetTransform(origin.M);
 		App->scene_intro->ResetDynObstacles();
-	}
+	}*/
+	
+	
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
@@ -149,10 +152,7 @@ update_status ModulePlayer::Update(float dt)
 
 	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
-		if (vehicle->GetBody()->getLinearVelocity() > 0)
-			brake = BRAKE_POWER;
-
-		//acceleration = -MAX_ACCELERATION * 0.5;
+		acceleration = -MAX_ACCELERATION * 0.5;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN && !isJumping)
@@ -167,9 +167,9 @@ update_status ModulePlayer::Update(float dt)
 
 	vehicle->Render();
 
-	char title[80];
+	/*char title[80];
 	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
-	App->window->SetTitle(title);
+	App->window->SetTitle(title);*/
 
 	//----------------
 	
@@ -177,5 +177,16 @@ update_status ModulePlayer::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModulePlayer::Reset()
+{
+	mat4x4 transform = IdentityMatrix;
+	last_checkpoint->GetTransform(&transform);
+	vehicle->SetTransform(&transform);
+	//App->camera->Position = vehicle->GetBody()->getWorldTransform().getOrigin();
+	vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
+	App->scene_intro->ResetDynObstacles();
 
+
+
+}
 

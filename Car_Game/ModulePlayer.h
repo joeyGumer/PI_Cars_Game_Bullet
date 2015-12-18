@@ -4,6 +4,7 @@
 #include "p2Point.h"
 
 struct PhysVehicle3D;
+struct PhysBody3D;
 
 #define MAX_ACCELERATION 3500.0f
 #define TURN_DEGREES 15.0f * DEGTORAD
@@ -20,6 +21,9 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+
+	void Reset();
+
 public:
 
 	PhysVehicle3D* vehicle;
@@ -27,6 +31,8 @@ public:
 	float acceleration;
 	float brake;
 	mat4x4 origin;
+
+	PhysBody3D* last_checkpoint = NULL;
 
 	bool isJumping;
 };

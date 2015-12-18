@@ -3,11 +3,14 @@
 #include "p2DynArray.h"
 #include "Globals.h"
 #include "Primitive.h"
+#include "Timer.h"
 
-#define MAX_SNAKE 2
+#define NUM_CHECKPOINTS 2
+#define NUM_LAPS 3
 
 struct PhysBody3D;
 struct PhysMotor3D;
+
 
 class ModuleSceneIntro : public Module
 {
@@ -19,16 +22,33 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
+	void OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEvent pevent);
 
+	void ResetDynObstacles();
+	
+private:
 	void CreateCircuit();
+	void CreateCheckpoints();
 	void CreateObstacles();
 	void CreateDynObstacles();
 
 	void UpdateDynObstacles();
-	void ResetDynObstacles();
+
+	void RenderScene();
+
 
 public:
+
+	//Scene variables (not objects)
+
+	int next_checkpoint_index = 0;
+	int lap_count = 1;
+
+	Timer play_timer;
+	int best_time_min = 0;
+	int best_time_sec = 0;
+
+	bool debug = false;
 
 	//Car
 	PhysBody3D* pb_chassis;
@@ -46,6 +66,11 @@ public:
 	//Circuit
 	p2List<PhysBody3D*> circuitbody_list;
 	p2List<Cube> circuitcube_list;
+
+	
+	//CheckPoint
+	p2List<PhysBody3D*> pb_checkpoint_list;
+	p2List<Cube> checkpoint_list;
 
 	//Static Obstacles
 	p2List<PhysBody3D*> obstaclebody_list;
@@ -74,5 +99,6 @@ public:
 	mat4x4 origin_door2;
 	PhysBody3D* pb_d2anchor;
 	Sphere p_d2anchor;
+
 
 };

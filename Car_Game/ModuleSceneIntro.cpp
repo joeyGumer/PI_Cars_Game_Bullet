@@ -3,6 +3,9 @@
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
 #include "PhysBody3D.h"
+#include "ModulePlayer.h"
+
+
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -21,10 +24,14 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));*/
 
 	CreateCircuit();
+	CreateCheckpoints();
 	CreateObstacles();
 	CreateDynObstacles();
 
 	angle = 0;
+
+	App->audio->PlayMusic("Game/sans.ogg");
+	play_timer.Start();
 
 	return ret;
 }
@@ -34,59 +41,174 @@ bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
+	circuitbody_list.clear();
+	circuitcube_list.clear();
+	checkpoint_list.clear();
+	pb_checkpoint_list.clear();
+
 	return true;
 }
 
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	Plane p(0, 1, 0, 0);
-	p.axis = true;
-	p.Render();
-
-	p2List_item<Cube>* tmp;
-	tmp = circuitcube_list.getFirst();
-	while (tmp != NULL)
-	{
-		tmp->data.Render();
-		tmp = tmp->next;
-	}
-
-	p2List_item<Cylinder>* tmp2;
-	tmp2 = obstaclecylinder_list.getFirst();
-	while (tmp2 != NULL)
-	{
-		tmp2->data.Render();
-		tmp2 = tmp2->next;
-	}
-
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		debug = !debug;
 	
-	p2List_item<Cube>* tmp3;
-	tmp3 = obstaclecube_list.getFirst();
-	while (tmp3 != NULL)
-	{
-		tmp3->data.Render();
-		tmp3 = tmp3->next;
-	}
-	
-	p2List_item<Sphere>* tmp4;
-	tmp4 = obstaclesphere_list.getFirst();
-	while (tmp4 != NULL)
-	{
-		tmp4->data.Render();
-		tmp4 = tmp4->next;
-	}
+	RenderScene();
 
 	UpdateDynObstacles();
+	
+	char title[80];
+	int sec = play_timer.Read() / 1000;
+	int min = sec/60;
+
+	sprintf_s(title, "Lap: %d / %d ---- Time: %d min %d sec --- Best time: %d min %d sec", lap_count, NUM_LAPS, min, sec % 60, best_time_min, best_time_sec % 60);
+	App->window->SetTitle(title);
 
 	return UPDATE_CONTINUE;
 }
 
-void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
+void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEvent pevent)
 {
-
+	//Provisional
+	if (body1->IsSensor() /*&& body2 == pb_chassis*/)
+	{
+		if (pevent == BEGIN_CONTACT)
+		{
+			if (next_checkpoint_index != pb_checkpoint_list.find(body1))
+			{
+				App->player->last_checkpoint = body1;
+				next_checkpoint_index++;
+				
+				if (next_checkpoint_index == NUM_CHECKPOINTS)
+				{
+					next_checkpoint_index = 0;
+					lap_count++;
+				}
+			}
+			
+		}
+	}
 }
 
+void ModuleSceneIntro::RenderScene()
+{
+	Plane p(0, 1, 0, 0);
+	p.color.Set(0, 255, 255);
+	p.Render();
+
+	p2List_item<Cube>* tmp;
+	tmp = circuitcube_list.getFirst();
+	for (; tmp; tmp = tmp->next)
+		tmp->data.Render();
+
+
+	tmp = obstaclecube_list.getFirst();
+	for (; tmp; tmp = tmp->next)
+		tmp->data.Render();
+
+	if (debug)
+	{
+		tmp = checkpoint_list.getFirst();
+		for (; tmp; tmp = tmp->next)
+			tmp->data.Render();
+	}
+
+	p2List_item<Cylinder>* tmp2 = obstaclecylinder_list.getFirst();
+	for (; tmp2; tmp2 = tmp2->next)
+		tmp2->data.Render();
+
+	p2List_item<Sphere>* tmp3 = obstaclesphere_list.getFirst();
+	for (; tmp3; tmp3 = tmp3->next)
+		tmp3->data.Render();
+
+	Cube post1(1, 9, 1);
+	post1.SetPos(-5, 7, 0);
+	post1.color = Blue;
+	post1.Render();
+
+	Cube post2(1, 9, 1);
+	post2.SetPos(5, 7, 0);
+	post2.color = Blue;
+	post2.Render();
+
+	Cube flag(9, 2, 1);
+	flag.SetPos(0, 10.5f, 0);
+	flag.color = Green;
+	flag.Render();
+
+	Cube paint1(9, 0, 1);
+	paint1.SetPos(0, 3.55f, 0);
+	//paint1.color = Blue;
+	paint1.Render();
+
+	Cube paint2(9, 0, 1);
+	paint2.SetPos(10, 38.5f, -34);
+	paint2.SetRotation(-90, { 0, 1, 0 });
+	//paint1.color = Blue;
+	paint2.Render();
+
+	Sphere lap1(1);
+	lap1.SetPos(3, 10.5f, 0);
+	lap1.Render();
+	if (lap_count >= 2)
+	{
+		Sphere lap2(1);
+		lap2.SetPos(0, 10.5f, 0);
+		lap2.Render();
+		if (lap_count >= 3)
+		{
+			Sphere lap3(1);
+			lap3.SetPos(-3, 10.5f, 0);
+			lap3.Render();
+			if (lap_count > 3)
+			{
+				play_timer.Stop();
+
+				if (best_time_sec == 0 || play_timer.Read() / 1000 < best_time_sec)
+				{
+					best_time_sec = play_timer.Read() / 1000;
+					best_time_min = best_time_sec / 60;
+				}
+
+				lap_count = 1;
+				App->player->Reset();
+				play_timer.Start();
+
+			}
+		}
+	}
+}
+
+void ModuleSceneIntro::CreateCheckpoints()
+{
+	//Checkpoint 1
+	Cube checkpoint1(9, 5, 1);
+	checkpoint1.SetPos(0, 5, 0);
+	checkpoint1.color = Green;
+	checkpoint_list.add(checkpoint1);
+	PhysBody3D* pb_checkpoint1 = App->physics->AddBody(checkpoint1, 0.0f);
+	pb_checkpoint1->SetAsSensor(true);
+	pb_checkpoint1->collision_listeners.add(this);
+	pb_checkpoint_list.add(pb_checkpoint1);
+
+	App->player->last_checkpoint = pb_checkpoint1;
+
+	//Checkpoint 2
+	Cube checkpoint2(9, 5, 1);
+	checkpoint2.SetPos(10, 40.92f, -34);
+	checkpoint2.SetRotation(-90, { 0, 1, 0 });
+	checkpoint2.color = Green;
+	checkpoint_list.add(checkpoint2);
+	PhysBody3D* pb_checkpoint2 = App->physics->AddBody(checkpoint2, 0.0f);
+	pb_checkpoint2->SetAsSensor(true);
+	pb_checkpoint2->collision_listeners.add(this);
+	pb_checkpoint_list.add(pb_checkpoint2);
+
+	
+
+}
 void ModuleSceneIntro::CreateCircuit()
 {
 	//1stSegment
@@ -96,6 +218,7 @@ void ModuleSceneIntro::CreateCircuit()
 	circuitcube_list.add(segment1);
 	PhysBody3D* segmentbody1 = App->physics->AddBody(segment1, 0.0f);
 	circuitbody_list.add(segmentbody1);
+	
 
 	//2ndSegment
 	Cube segment2(12, 1, 12);
