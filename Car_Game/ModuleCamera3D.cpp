@@ -285,3 +285,12 @@ void ModuleCamera3D::CalculateViewMatrix()
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
 	ViewMatrixInverse = inverse(ViewMatrix);
 }
+
+void ModuleCamera3D::Reset()
+{
+	btVector3 cam(0, CAMERA_HEIGHT, CAMERA_DISTANCE);
+	float angle = App->player->vehicle->GetBody()->getWorldTransform().getRotation().getAngle();
+
+	cam.rotate({ 0, 1, 0 }, angle);
+	Position = { cam.getX(), cam.getY(), -cam.getZ() };
+}

@@ -194,15 +194,17 @@ update_status ModulePlayer::Update(float dt)
 
 void ModulePlayer::Reset()
 {
-	mat4x4 transform = IdentityMatrix;
+	//Vehicle Reset
+	mat4x4 transform;
 	last_checkpoint->GetTransform(&transform);
 	vehicle->SetTransform(&transform);
-	//App->camera->Position = vehicle->GetBody()->getWorldTransform().getOrigin();
 	vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
 	vehicle->GetBody()->setAngularVelocity({ 0, 0, 0 });
+	
+	//Camera Reset
+	App->camera->Reset();
+
+	//Obstacles Reset
 	App->scene_intro->ResetDynObstacles();
-
-
-
 }
 

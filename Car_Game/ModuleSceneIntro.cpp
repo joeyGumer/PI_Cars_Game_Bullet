@@ -30,7 +30,7 @@ bool ModuleSceneIntro::Start()
 
 	angle = 0;
 
-	//App->audio->PlayMusic("Game/sans.ogg");
+	App->audio->PlayMusic("Game/sans.ogg");
 	play_timer.Start();
 
 	return ret;
