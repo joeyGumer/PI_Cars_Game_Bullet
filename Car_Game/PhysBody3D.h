@@ -23,6 +23,8 @@ public:
 	//provisional, to see if it works
 	btRigidBody* GetBody()const { return body; }
 	
+	void GetPosition(float x, float y, float z) const;
+	
 
 private:
 	btRigidBody* body = nullptr;

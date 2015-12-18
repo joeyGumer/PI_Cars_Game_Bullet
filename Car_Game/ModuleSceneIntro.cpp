@@ -54,17 +54,56 @@ update_status ModuleSceneIntro::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
+	
+	RenderScene();
 
+	UpdateDynObstacles();
+	
+	char title[80];
+	int sec = play_timer.Read() / 1000;
+	int min = sec/60;
+
+	sprintf_s(title, "Lap: %d / %d ---- Time: %d min %d sec --- Best time: %d min %d sec", lap_count, NUM_LAPS, min, sec % 60, best_time_min, best_time_sec % 60);
+	App->window->SetTitle(title);
+
+	return UPDATE_CONTINUE;
+}
+
+void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEvent pevent)
+{
+	//Provisional
+	if (body1->IsSensor() /*&& body2 == pb_chassis*/)
+	{
+		if (pevent == BEGIN_CONTACT)
+		{
+			if (next_checkpoint_index != pb_checkpoint_list.find(body1))
+			{
+				App->player->last_checkpoint = body1;
+				next_checkpoint_index++;
+				
+				if (next_checkpoint_index == NUM_CHECKPOINTS)
+				{
+					next_checkpoint_index = 0;
+					lap_count++;
+				}
+			}
+			
+		}
+	}
+}
+
+void ModuleSceneIntro::RenderScene()
+{
 	Plane p(0, 1, 0, 0);
 	p.color.Set(0, 255, 255);
 	p.Render();
-	
+
 	p2List_item<Cube>* tmp;
 	tmp = circuitcube_list.getFirst();
 	for (; tmp; tmp = tmp->next)
 		tmp->data.Render();
 
-	
+
 	tmp = obstaclecube_list.getFirst();
 	for (; tmp; tmp = tmp->next)
 		tmp->data.Render();
@@ -83,10 +122,9 @@ update_status ModuleSceneIntro::Update(float dt)
 	p2List_item<Sphere>* tmp3 = obstaclesphere_list.getFirst();
 	for (; tmp3; tmp3 = tmp3->next)
 		tmp3->data.Render();
-	
-	//Put all the painting functions on a simple function
+
 	Cube post1(1, 9, 1);
-	post1.SetPos(-5 , 7,0);
+	post1.SetPos(-5, 7, 0);
 	post1.color = Blue;
 	post1.Render();
 
@@ -135,43 +173,10 @@ update_status ModuleSceneIntro::Update(float dt)
 				}
 
 				lap_count = 1;
+				App->player->Reset();
 				play_timer.Start();
-	
+
 			}
-		}
-	}
-
-	UpdateDynObstacles();
-	
-	char title[80];
-	int sec = play_timer.Read() / 1000;
-	int min = sec/60;
-
-	sprintf_s(title, "Lap: %d / %d ---- Time: %d min %d sec --- Best time: %d min %d sec", lap_count, NUM_LAPS, min, sec % 60, best_time_min, best_time_sec % 60);
-	App->window->SetTitle(title);
-
-	return UPDATE_CONTINUE;
-}
-
-void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEvent pevent)
-{
-	//Provisional
-	if (body1->IsSensor() /*&& body2 == pb_chassis*/)
-	{
-		if (pevent == BEGIN_CONTACT)
-		{
-			if (next_checkpoint_index != pb_checkpoint_list.find(body1))
-			{
-				App->player->last_checkpoint = body1;
-				next_checkpoint_index++;
-				
-				if (next_checkpoint_index == NUM_CHECKPOINTS)
-				{
-					next_checkpoint_index = 0;
-					lap_count++;
-				}
-			}
-			
 		}
 	}
 }

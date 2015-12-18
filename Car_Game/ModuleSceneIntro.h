@@ -24,14 +24,17 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEvent pevent);
 
-	//Put this on private?
+	void ResetDynObstacles();
+	
+private:
 	void CreateCircuit();
 	void CreateCheckpoints();
 	void CreateObstacles();
 	void CreateDynObstacles();
 
 	void UpdateDynObstacles();
-	void ResetDynObstacles();
+
+	void RenderScene();
 
 
 public:

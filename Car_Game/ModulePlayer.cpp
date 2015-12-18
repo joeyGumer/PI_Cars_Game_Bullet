@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
+#include "ModuleCamera3D.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
@@ -118,14 +119,9 @@ update_status ModulePlayer::Update(float dt)
 
 	
 	
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_UP || vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN || vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
 	{
-
-		mat4x4 transform = IdentityMatrix;
-		last_checkpoint->GetTransform(&transform);
-		vehicle->SetTransform(&transform);
-		vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
-		App->scene_intro->ResetDynObstacles();
+		Reset();
 	}
 
 	/*if (vehicle->GetBody()->getWorldTransform().getOrigin().getY() < 1)
@@ -187,5 +183,16 @@ update_status ModulePlayer::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModulePlayer::Reset()
+{
+	mat4x4 transform = IdentityMatrix;
+	last_checkpoint->GetTransform(&transform);
+	vehicle->SetTransform(&transform);
+	//App->camera->Position = vehicle->GetBody()->getWorldTransform().getOrigin();
+	vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
+	App->scene_intro->ResetDynObstacles();
 
+
+
+}
 
