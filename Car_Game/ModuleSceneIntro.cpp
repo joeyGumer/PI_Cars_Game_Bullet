@@ -30,7 +30,7 @@ bool ModuleSceneIntro::Start()
 
 	angle = 0;
 
-	App->audio->PlayMusic("Game/sans.ogg");
+	//App->audio->PlayMusic("Game/sans.ogg");
 	play_timer.Start();
 
 	return ret;
@@ -90,6 +90,11 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEve
 			
 		}
 	}
+
+	if (!body1->IsSensor())
+	{
+		App->player->isJumping = false;
+	}
 }
 
 void ModuleSceneIntro::RenderScene()
@@ -102,7 +107,6 @@ void ModuleSceneIntro::RenderScene()
 	tmp = circuitcube_list.getFirst();
 	for (; tmp; tmp = tmp->next)
 		tmp->data.Render();
-
 
 	tmp = obstaclecube_list.getFirst();
 	for (; tmp; tmp = tmp->next)
@@ -142,12 +146,17 @@ void ModuleSceneIntro::RenderScene()
 	paint1.SetPos(0, 3.55f, 0);
 	//paint1.color = Blue;
 	paint1.Render();
-
-	Cube paint2(9, 0, 1);
-	paint2.SetPos(10, 38.5f, -34);
-	paint2.SetRotation(-90, { 0, 1, 0 });
-	//paint1.color = Blue;
+	
+	Cube paint2(9, 5, 1);
+	paint2.SetPos(114, 38.5f, 14);
+	paint2.SetRotation(180, { 0, 1, 0 });
 	paint2.Render();
+
+	Cube paint3(9, 0, 1);
+	paint3.SetPos(-10, 38.5f, -34);
+	paint3.SetRotation(-90, { 0, 1, 0 });
+	//paint1.color = Blue;
+	paint3.Render();
 
 	Sphere lap1(1);
 	lap1.SetPos(3, 10.5f, 0);
@@ -195,16 +204,28 @@ void ModuleSceneIntro::CreateCheckpoints()
 
 	App->player->last_checkpoint = pb_checkpoint1;
 
+
 	//Checkpoint 2
 	Cube checkpoint2(9, 5, 1);
-	checkpoint2.SetPos(10, 40.92f, -34);
-	checkpoint2.SetRotation(-90, { 0, 1, 0 });
+	checkpoint2.SetPos(114, 40.92f, 14);
+	checkpoint2.SetRotation(180, { 0, 1, 0 });
 	checkpoint2.color = Green;
 	checkpoint_list.add(checkpoint2);
 	PhysBody3D* pb_checkpoint2 = App->physics->AddBody(checkpoint2, 0.0f);
 	pb_checkpoint2->SetAsSensor(true);
 	pb_checkpoint2->collision_listeners.add(this);
 	pb_checkpoint_list.add(pb_checkpoint2);
+
+	//Checkpoint 3
+	Cube checkpoint3(9, 5, 1);
+	checkpoint3.SetPos(-10, 40.92f, -34);
+	checkpoint3.SetRotation(-90, { 0, 1, 0 });
+	checkpoint3.color = Green;
+	checkpoint_list.add(checkpoint3);
+	PhysBody3D* pb_checkpoint3 = App->physics->AddBody(checkpoint3, 0.0f);
+	pb_checkpoint3->SetAsSensor(true);
+	pb_checkpoint3->collision_listeners.add(this);
+	pb_checkpoint_list.add(pb_checkpoint3);
 
 	
 
@@ -217,6 +238,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment1.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment1);
 	PhysBody3D* segmentbody1 = App->physics->AddBody(segment1, 0.0f);
+	segmentbody1->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody1);
 	
 
@@ -226,6 +248,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment2.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment2);
 	PhysBody3D* segmentbody2 = App->physics->AddBody(segment2, 0.0f);
+	segmentbody2->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody2);
 	
 
@@ -236,6 +259,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment3.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment3);
 	PhysBody3D* segmentbody3 = App->physics->AddBody(segment3, 0.0f);
+	segmentbody3->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody3);
 
 	//4thSegment
@@ -245,6 +269,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment4.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment4);
 	PhysBody3D* segmentbody4 = App->physics->AddBody(segment4, 0.0f);
+	segmentbody4->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody4);
 
 	//5thSegment
@@ -254,6 +279,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment5.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment5);
 	PhysBody3D* segmentbody5 = App->physics->AddBody(segment5, 0.0f);
+	segmentbody5->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody5);
 
 	//6thSegment
@@ -263,6 +289,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment6.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment6);
 	PhysBody3D* segmentbody6 = App->physics->AddBody(segment6, 0.0f);
+	segmentbody6->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody6);
 
 	//7thSegment
@@ -271,6 +298,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment7.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment7);
 	PhysBody3D* segmentbody7 = App->physics->AddBody(segment7, 0.0f);
+	segmentbody7->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody7);
 
 	//8thSegment
@@ -280,6 +308,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment8.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment8);
 	PhysBody3D* segmentbody8 = App->physics->AddBody(segment8, 0.0f);
+	segmentbody8->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody8);
 
 	//9thSegment
@@ -292,6 +321,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment9.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment9);
 	PhysBody3D* segmentbody9 = App->physics->AddBody(segment9, 0.0f);
+	segmentbody9->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody9);
 
 	//10thSegment
@@ -301,6 +331,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment10.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment10);
 	PhysBody3D* segmentbody10 = App->physics->AddBody(segment10, 0.0f);
+	segmentbody10->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody10);
 
 	//11thSegment
@@ -309,6 +340,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment11.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment11);
 	PhysBody3D* segmentbody11 = App->physics->AddBody(segment11, 0.0f);
+	segmentbody11->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody11);
 
 	//12thSegment
@@ -318,6 +350,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment12.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment12);
 	PhysBody3D* segmentbody12 = App->physics->AddBody(segment12, 0.0f);
+	segmentbody12->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody12);
 
 	//13thSegment
@@ -327,6 +360,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment13.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment13);
 	PhysBody3D* segmentbody13 = App->physics->AddBody(segment13, 0.0f);
+	segmentbody13->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody13);
 
 	//14thSegment
@@ -336,6 +370,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment14.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment14);
 	PhysBody3D* segmentbody14 = App->physics->AddBody(segment14, 0.0f);
+	segmentbody14->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody14);
 
 	//15thSegment
@@ -344,6 +379,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment15.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment15);
 	PhysBody3D* segmentbody15 = App->physics->AddBody(segment15, 0.0f);
+	segmentbody15->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody15);
 
 	//16thSegment
@@ -356,6 +392,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment16.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment16);
 	PhysBody3D* segmentbody16 = App->physics->AddBody(segment16, 0.0f);
+	segmentbody16->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody16);
 
 	//17thSegment
@@ -364,6 +401,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment17.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment17);
 	PhysBody3D* segmentbody17 = App->physics->AddBody(segment17, 0.0f);
+	segmentbody17->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody17);
 
 	//18thSegment
@@ -376,6 +414,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment18.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment18);
 	PhysBody3D* segmentbody18 = App->physics->AddBody(segment18, 0.0f);
+	segmentbody18->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody18);
 
 
@@ -385,6 +424,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment19.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment19);
 	PhysBody3D* segmentbody19 = App->physics->AddBody(segment19, 0.0f);
+	segmentbody18->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody19);
 
 	//20thSegment
@@ -393,6 +433,7 @@ void ModuleSceneIntro::CreateCircuit()
 	segment20.color.Set(0.7f, 0, 0);
 	circuitcube_list.add(segment20);
 	PhysBody3D* segmentbody20 = App->physics->AddBody(segment20, 0.0f);
+	segmentbody20->collision_listeners.add(this);
 	circuitbody_list.add(segmentbody20);
 
 }
