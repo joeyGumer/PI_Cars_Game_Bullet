@@ -24,13 +24,13 @@ bool ModulePlayer::Start()
 
 	// Car properties ----------------------------------------
 	car.chassis_size.Set(2, 0.5, 4);
-	car.chassis_offset.Set(0, 0.5, 0);
+	car.chassis_offset.Set(0, 0.5, 0.2);
 	car.mass = 1000.0f;
 	car.suspensionStiffness = 100.88f;
 	car.suspensionCompression = 3.0f;
 	car.suspensionDamping = 0.88f;
 	car.maxSuspensionTravelCm = 1000.0f;
-	car.frictionSlip = 2000.5;
+	car.frictionSlip = 1000.5;
 	car.maxSuspensionForce = 5000.0f;
 
 	// Wheel properties ---------------------------------------
@@ -136,6 +136,8 @@ update_status ModulePlayer::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
 		acceleration = MAX_ACCELERATION;
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+			acceleration = MAX_ACCELERATION * 2;
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
@@ -152,7 +154,10 @@ update_status ModulePlayer::Update(float dt)
 
 	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
-		acceleration = -MAX_ACCELERATION * 0.5;
+		if (vehicle->GetKmh() > 0)
+			brake = BRAKE_POWER;
+		else
+			acceleration = -MAX_ACCELERATION * 0.5;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN && !isJumping)

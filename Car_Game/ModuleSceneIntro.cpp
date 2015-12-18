@@ -539,7 +539,7 @@ void ModuleSceneIntro::CreateDynObstacles()
 	p_pendulum.radius = 3;
 	p_pendulum.SetPos(24, 42, -15);
 	p_pendulum.color.Set(0, 0.5f, 0);
-	pb_pendulum = App->physics->AddBody(p_pendulum, 1.5f);
+	pb_pendulum = App->physics->AddBody(p_pendulum, 5000.0f);
 
 	p_panchor.radius = 0.5f;
 	p_panchor.SetPos(24, 75, -34);
