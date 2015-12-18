@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "PhysBody3D.h"
 #include "ModulePlayer.h"
+#include "PhysVehicle3D.h"
 
 
 
@@ -19,9 +20,6 @@ bool ModuleSceneIntro::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
-
-	/*App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
-	App->camera->LookAt(vec3(0, 0, 0));*/
 
 	CreateCircuit();
 	CreateCheckpoints();
@@ -64,11 +62,11 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	UpdateDynObstacles();
 	
-	char title[80];
+	char title[100];
 	int sec = play_timer.Read() / 1000;
 	int min = sec/60;
 
-	sprintf_s(title, "Lap: %d / %d ---- Time: %d min %d sec --- Best time: %d min %d sec", lap_count, NUM_LAPS, min, sec % 60, best_time_min, best_time_sec % 60);
+	sprintf_s(title, "Lap: %d / %d ---- Time: %d min %d sec --- Best time: %d min %d sec --- Speed: %.1f Km/h", lap_count, NUM_LAPS, min, sec % 60, best_time_min, best_time_sec % 60, App->player->vehicle->GetKmh());
 	App->window->SetTitle(title);
 
 	return UPDATE_CONTINUE;
@@ -115,9 +113,6 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2, PhysEve
 
 void ModuleSceneIntro::RenderScene()
 {
-	Plane p(0, 1, 0, 0);
-	p.color.Set(0, 255, 255);
-	p.Render();
 
 	p2List_item<Cube>* tmp;
 	tmp = circuitcube_list.getFirst();

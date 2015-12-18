@@ -40,7 +40,6 @@ private:
 public:
 
 	//Scene variables (not objects)
-
 	int next_checkpoint_index = 0;
 	int lap_count = 1;
 

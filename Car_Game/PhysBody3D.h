@@ -20,7 +20,7 @@ public:
 	void SetPos(float x, float y, float z);
 	void SetAsSensor(bool is_sensor);
 	bool IsSensor()const{ return is_sensor; }
-	//provisional, to see if it works
+
 	btRigidBody* GetBody()const { return body; }
 	
 

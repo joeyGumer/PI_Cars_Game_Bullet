@@ -42,9 +42,6 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	// Implement a debug camera with keys and mouse
-	// Now we can make this movememnt frame rate independant!
-
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 
@@ -109,8 +106,6 @@ update_status ModuleCamera3D::Update(float dt)
 
 	
 	//Camera position respect the player
-	//WOW IT WORKS
-	//OMG IT'S FUCKING AMAZING, THIS CAM FOR GOTY GAMES!
 	else
 	{
 
@@ -144,43 +139,6 @@ update_status ModuleCamera3D::Update(float dt)
 
 			Position = c_pos;
 
-			/*
-			// SHAME ON YOU, DAMMIT CAM FAILURES
-			*/
-
-			//------
-
-			//Standard reference
-			/*btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
-			btVector3 vehicle_pos = (transform.getOrigin());
-
-			vec3 camera_ref = { vehicle_pos.getX(), vehicle_pos.getY(), vehicle_pos.getZ() };
-			App->camera->LookAt(camera_ref);
-
-			//Lot's of wrong things
-
-			vec3 camera_pos(0, 5, -13);
-
-			App->camera->Position = camera_pos + camera_ref;*/
-
-			//------------
-			//Using car Z basis
-			/*It also doesn't work using the Z of the vehicle basiss
-			btVector3 vehicle_Z = (transform.getBasis().getColumn(2));
-
-			btVector3 c_pos = vehicle_pos + vehicle_Z * -10;
-			vec3 camera_pos = { c_pos.getX(), c_pos.getY(), c_pos.getZ() };
-			//Camera height
-			camera_pos.y += 5;
-			App->camera->Position = camera_pos;
-
-			//---------
-			//Rotation alying a quaternion over the camera point
-			//I can't do it to rotate with the car, ask ric how to do it
-			/*c_pos = quatRotate(rotation, c_pos);
-			vec3 camera_pos = { c_pos.getX(), c_pos.getX(), c_pos.getX() };
-			App->camera->Position = camera_pos;*/
-
 			//Rotation with QWERTY
 			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 			{
@@ -201,29 +159,6 @@ update_status ModuleCamera3D::Update(float dt)
 
 				
 			}
-		
-
-		/*if (first_person)
-		{
-			btTransform transform = App->player->vehicle->GetBody()->getWorldTransform();
-			btVector3 vehicle_pos = (transform.getOrigin());
-
-			vec3 camera_ref = { vehicle_pos.getX(), vehicle_pos.getY(), vehicle_pos.getZ() };
-			
-
-			btVector3 vehicle_Z = (transform.getBasis().getColumn(2));
-			btVector3 vehicle_X = (transform.getBasis().getColumn(0));
-			btVector3 vehicle_Y = (transform.getBasis().getColumn(1));
-
-			Z = { -vehicle_Z.getX(), -vehicle_Z.getY(), -vehicle_Z.getZ() };
-			X = { vehicle_X.getX(), vehicle_X.getY(), vehicle_X.getZ() };
-			Y = { vehicle_Y.getX(), vehicle_Y.getY(), vehicle_Y.getZ() };
-
-
-			Position = Position = camera_ref + Z* -2;
-
-			//ADD something for when it changes to third person from first person, because it's not smooth at all
-		}*/
 	}
 
 	// Recalculate matrix -------------
