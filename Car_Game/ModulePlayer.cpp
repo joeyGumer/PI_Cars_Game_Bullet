@@ -153,12 +153,6 @@ update_status ModulePlayer::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
 		acceleration = -MAX_ACCELERATION * 0.5;
-		//brake = BRAKE_POWER;
-		/*
-		if (vehicle->GetBody()->getLinearVelocity() > 0)
-			brake = BRAKE_POWER;*/
-
-		//acceleration = -MAX_ACCELERATION * 0.5;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN && !isJumping)
